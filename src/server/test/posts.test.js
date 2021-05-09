@@ -13,8 +13,8 @@ const createPost = async (post) => {
             method: 'POST',
             data: post
         });
-        const id = response.data._id;
-        return id;
+        return response.data;
+      
     }catch(err){
         console.log(err);
         return err;
@@ -63,14 +63,18 @@ const getPost = async (id) => {
 
 
 
-test("Should create", async () => {
+test("Should create and delete a post", async () => {
     // given - dado que
     const post = {title: generate(), content: generate()};
    
     // when - quando acontecer
-    const id = await createPost(post);
+    const data = await createPost(post);
+    const id = data._id;   
 
     // then - então
+    expect(data.title).toBe(post.title);
+    expect(data.content).toBe(post.content);
+
     const deletedPost = await deletePost(id);
     //console.log("deletedPost -> ",deletedPost);
 
@@ -78,15 +82,23 @@ test("Should create", async () => {
 
 test("Should get posts", async () => {
     const posts = await getPosts();
-    //console.log(posts);
+    expect(posts.length) 
 });
 
 test("Should get one post", async () => {
     const newPost = {title: generate(), content: generate()};
-    const id = await createPost(newPost);
+
+    const data = await createPost(newPost);
+    const id = data._id;
     const post = await getPost(id);
+    expect(data.title).toBe(newPost.title);
+    expect(data.content).toBe(newPost.content);
+
     const deletedPost = await deletePost(id);
-    //console.log(post);
+ 
 })
+
+
+
 
 
