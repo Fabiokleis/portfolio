@@ -21,10 +21,11 @@ const createPost = async (post) => {
     }
 
 }
+
 const deletePost = async (id) => {
     try{
         const response = await axios({
-            url: 'http://127.0.0.1:3000/posts/'+id,
+            url: `http://127.0.0.1:3000/posts/${id}`,
             method: 'DELETE'
         });
         return response.data;
@@ -34,7 +35,35 @@ const deletePost = async (id) => {
     }
 }
 
-test("Should create and delete posts", async function() {
+const getPosts = async () => {
+    try{
+        const response = await axios({
+            url: `http://127.0.0.1:3000/posts`,
+            method: 'GET'
+        });
+        return response.data;
+    }catch(err){
+        console.log(err);
+        return err;
+    }
+}
+
+const getPost = async (id) => {
+    try{
+        const response = await axios({
+            url: `http://127.0.0.1:3000/posts/${id}`,
+            method: 'GET'
+        });
+        return response.data;
+    }catch(err){
+        console.log(err);
+        return err;
+    }
+}
+
+
+
+test("Should create", async () => {
     // given - dado que
     const post = {title: generate(), content: generate()};
    
@@ -43,9 +72,21 @@ test("Should create and delete posts", async function() {
 
     // then - então
     const deletedPost = await deletePost(id);
-    console.log("deletedPost -> ",deletedPost);
+    //console.log("deletedPost -> ",deletedPost);
 
 });
 
+test("Should get posts", async () => {
+    const posts = await getPosts();
+    //console.log(posts);
+});
+
+test("Should get one post", async () => {
+    const newPost = {title: generate(), content: generate()};
+    const id = await createPost(newPost);
+    const post = await getPost(id);
+    const deletedPost = await deletePost(id);
+    //console.log(post);
+})
 
 

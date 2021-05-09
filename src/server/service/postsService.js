@@ -12,6 +12,17 @@ const postsService = {
         }
     },
 
+    getPost: async (req, res) => {
+        const id = req.params.id;
+        try{
+            const post = await postsModel.findById(id);
+            console.log("required one post");
+            res.status(200).send(post);
+        }catch(err){
+            res.status(404).send(err);
+        }
+    },
+    
     savePost: async (req, res) => {
         const newPost = new postsModel({
             title: req.body.title,
