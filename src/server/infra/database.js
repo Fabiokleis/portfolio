@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 const URL_ = "mongodb://127.0.0.1:27017/blog"; // substituir por env var
 
-mongoose.connect(URL_, {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(URL_, {
+    useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false
+ });
 
 const db = mongoose.connection;
 
