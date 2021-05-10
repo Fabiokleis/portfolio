@@ -5,7 +5,7 @@ const postsService = {
     getPosts: async (req, res) => {
         try{
             const posts = await postsModel.find();
-            console.log("required posts")
+            console.log("required posts");
             res.status(200).send(posts);
         }catch(err){
             res.status(404).send(err);
@@ -16,7 +16,7 @@ const postsService = {
         const id = req.params.id;
         try{
             const post = await postsModel.findById(id);
-            console.log("required one post");
+            console.log("required post", post._id);
             res.status(200).send(post);
         }catch(err){
             res.status(404).send(err);
@@ -30,7 +30,7 @@ const postsService = {
         });
         try{
             const savedPost = await newPost.save();
-            console.log("created post");
+            console.log("created post", savedPost._id);
             res.status(200).send(savedPost);
 
         }catch(err){
@@ -40,11 +40,28 @@ const postsService = {
         }
     },
 
+    updatePost: async (req, res) => {
+        const id = req.params.id;
+        const data = req.body;
+        try{
+            const updatedPost = await postsModel.findOneAndUpdate(
+                {_id: id}, 
+                { $set: {title: data.title, content: data.content}},
+                {new: true});
+            
+            console.log("post updated", updatedPost._id);
+            res.status(200).send(updatedPost);
+        }catch(err){
+            console.log(err);
+            res.status(400).send(err);
+        }
+    },
+
     deletePost: async (req, res) => {
         const id = req.params.id;
         try{
             const deletedPost = await postsModel.findByIdAndDelete(id);
-            console.log("deleted post");
+            console.log("deleted post", deletedPost._id);
             res.status(200).send(deletedPost);
         }catch(err){
             console.log(err);

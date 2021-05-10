@@ -1,102 +1,93 @@
 const axios = require('axios');
 const crypto = require('crypto');
 
-// criado umas reqs para teste
+// refatorado em uma funcao generica para request
 
 const generate = () => {
     return crypto.randomBytes(20).toString('hex');
 }
-const createPost = async (post) => {
-    try{
-        const response = await axios({
-            url: 'http://127.0.0.1:3000/posts',
-            method: 'POST',
-            data: post
-        });
-        return response.data;
-      
-    }catch(err){
-        console.log(err);
-        return err;
-    }
 
+const generateRequest = async (url, method, post) => {
+    const methods = ["GET", "POST", "DELETE", "PUT"];
+     if(!methods.some(met => met === method)) return "method not exist";
+
+        try{
+            const response = await axios({
+                     url: url,
+                     method: method,
+                     data: post
+                 });
+                return response.data;
+        }catch(err){
+            console.log(err);
+            return err;
+        }
 }
 
-const deletePost = async (id) => {
-    try{
-        const response = await axios({
-            url: `http://127.0.0.1:3000/posts/${id}`,
-            method: 'DELETE'
-        });
-        return response.data;
-    }catch(err){
-        console.log(err);
-        return err;
-    }
-}
-
-const getPosts = async () => {
-    try{
-        const response = await axios({
-            url: `http://127.0.0.1:3000/posts`,
-            method: 'GET'
-        });
-        return response.data;
-    }catch(err){
-        console.log(err);
-        return err;
-    }
-}
-
-const getPost = async (id) => {
-    try{
-        const response = await axios({
-            url: `http://127.0.0.1:3000/posts/${id}`,
-            method: 'GET'
-        });
-        return response.data;
-    }catch(err){
-        console.log(err);
-        return err;
-    }
-}
+const base_url = "http://127.0.0.1:3000";
+const post = {title: generate(), content: generate()};
 
 
+test("Should create post and delete post", async () => {
 
-test("Should create and delete a post", async () => {
-    // given - dado que
-    const post = {title: generate(), content: generate()};
+    const newPost = await generateRequest(
+        `${base_url}/posts`, "POST", post);
    
-    // when - quando acontecer
-    const data = await createPost(post);
-    const id = data._id;   
+    expect(newPost.title).toBe(post.title);
+    expect(newPost.content).toBe(post.content);
 
-    // then - então
+    const deletedPost = await generateRequest(
+        `${base_url}/posts/${newPost._id}`, "DELETE");
+
+    expect(deletedPost.title).toBe(newPost.title);
+    expect(deletedPost.content).toBe(newPost.content);
+});
+
+
+test("Should create post, get post and delete post", async () => {
+
+    const newPost = await generateRequest(
+        `${base_url}/posts`, "POST", post);
+
+    const data = await generateRequest(
+        `${base_url}/posts/${newPost._id}`, "GET");
+
     expect(data.title).toBe(post.title);
     expect(data.content).toBe(post.content);
+    
+    const deletedPost = await generateRequest(
+        `${base_url}/posts/${newPost._id}`, "DELETE");
 
-    const deletedPost = await deletePost(id);
-    //console.log("deletedPost -> ",deletedPost);
+    expect(deletedPost.title).toBe(newPost.title);
+    expect(deletedPost.content).toBe(newPost.content);
+
+});
+
+test("Should create, update and delete post", async () => {
+    const newPost = await generateRequest(
+        `${base_url}/posts`, "POST", post);
+
+    const updatedPost = await generateRequest(
+        `${base_url}/posts/${newPost._id}`, "PUT", post);
+    
+    expect(newPost.title).toBe(post.title);
+    expect(newPost.content).toBe(post.content);
+    expect(updatedPost._id).toBe(newPost._id);
+    
+    const deletedPost = await generateRequest(
+        `${base_url}/posts/${newPost._id}`, "DELETE");
+
+    expect(deletedPost.title).toBe(newPost.title);
+    expect(deletedPost.content).toBe(newPost.content);
+    expect(deletedPost._id).toBe(updatedPost._id);
 
 });
 
 test("Should get posts", async () => {
-    const posts = await getPosts();
-    expect(posts.length) 
+    const posts = await generateRequest(`${base_url}/posts`,  "GET");
+
+    //expect(posts.length).toBe(3);
 });
-
-test("Should get one post", async () => {
-    const newPost = {title: generate(), content: generate()};
-
-    const data = await createPost(newPost);
-    const id = data._id;
-    const post = await getPost(id);
-    expect(data.title).toBe(newPost.title);
-    expect(data.content).toBe(newPost.content);
-
-    const deletedPost = await deletePost(id);
- 
-})
 
 
 
