@@ -2,74 +2,70 @@ const knex = require('../infra/database.js');
 
 const usersService = {
 
-    getUsers: async (req, res, next) => {
+    getUsers: () => {
         try{
-            const results = await knex.select("id", "name", "email")
+            const results = knex.select("id", "name", "email")
                 .from("users");
-            res.status(200).json(results);
-
+            return results;
         }catch(err){
-            next(err);
+            return err
         }
     },
 
-    getUser: async (req, res, next) => {
+    getUser: async (req) => {
         const id = req.params.id;
         try{
-            const results = await knex.select("id","name","email")
+            const results = knex.select("id","name","email")
                 .from("users")
                 .where({id});
-
-            res.status(200).json(results);
+            return results;
         }catch(err){
-            next(err);
+            return err;
         }
     },
     
-    createUser: async (req, res, next) => {
+    createUser: (req) => {
         const {name, email, password} = req.body;
         try{
-            const results = await knex("users")
+            const results = knex("users")
                 .returning(["id", "name", "email"])
                 .insert({name, email, password});
 
-            res.status(201).json(results);
-
+           return results;
         }catch(err){
-            next(err);
+            return err;
         }
     },
 
-    updateUserName: async (req, res, next) => {
+    updateUserName: (req, res) => {
         const id = req.params.id;
         const name = req.body.name;
         const date = new Date();
         try{
-            const results = await knex("users")
-                .returning(["id", "name", "email"])
+            const results = knex("users")
+                .returning(["users.*"])
                 .where({id})
                 .update({
                     name: name,
                     updatedAt: date.toISOString()
                 });
-            res.status(200).json(results);
+            return results;
         }catch(err){
-            next(err);
+            return err;
         }
     },
 
-    deleteUser: async (req, res, next) => {
+    deleteUser: (req) => {
         const id = req.params.id;
         try{
-            const results = await knex("users")
+            const results = knex("users")
                 .returning(["users.*"])
                 .where({id})
                 .del()
-
-            res.status(200).json(results);
+            
+            return results;
         }catch(err){
-
-            next(err);
+            return err;
         }
     }
 
