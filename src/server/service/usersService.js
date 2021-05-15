@@ -1,4 +1,5 @@
 const knex = require('../infra/database.js');
+const bcrypt = require('bcrypt');
 
 const usersService = {
 
@@ -26,10 +27,12 @@ const usersService = {
     
     createUser: (req) => {
         const {name, email, password} = req.body;
+        const hashReturn = bcrypt.hashSync(password, 10);
+
         try{
             const results = knex("users")
                 .returning(["id", "name", "email"])
-                .insert({name, email, password});
+                .insert({name, email, password: hashReturn});
 
            return results;
         }catch(err){
