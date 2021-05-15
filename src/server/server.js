@@ -1,8 +1,16 @@
 const express = require('express');
 const app = express();
-const postsRoute = require('./route/postsRoute');
-const database = require('./infra/database');
+const usersRoute = require('./route/usersRoute');
 
-app.use('/', postsRoute);
+app.use('/users', usersRoute);
 
-app.listen(3000);
+app.use((err, req, res, next) => {
+    console.log(err.message);
+    res.status(500).send("server error");
+});
+
+
+app.listen(3000, (err) => {
+    console.log("connected");
+    if(err) throw err;
+});
