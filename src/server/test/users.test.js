@@ -1,9 +1,12 @@
 const axios = require('axios');
 const crypto = require('crypto');
 
+// TODO create a function or adjust generate to return valid string
+
 const generate = () => {
     return crypto.randomBytes(20).toString('hex');
 }
+
 
 const generateRequest = async (url, method, post) => {
     const methods = ["GET", "POST", "DELETE", "PUT"];

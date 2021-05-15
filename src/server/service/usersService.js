@@ -26,7 +26,8 @@ const usersService = {
     },
     
     createUser: (req) => {
-        const {name, email, password} = req.body;
+
+        const {name, email, password} = req;
         const hashReturn = bcrypt.hashSync(password, 10);
 
         try{
@@ -40,16 +41,18 @@ const usersService = {
         }
     },
 
-    updateUserName: (req, res) => {
-        const id = req.params.id;
-        const name = req.body.name;
+    updateUserPasswd: (data) => {
+        const { id, email, password } = data;
+
+        const hashReturn = bcrypt.hashSync(password, 10);
         const date = new Date();
+
         try{
             const results = knex("users")
                 .returning(["users.*"])
-                .where({id})
+                .where({id, email})
                 .update({
-                    name: name,
+                    password: hashReturn,
                     updatedAt: date.toISOString()
                 });
             return results;
@@ -71,8 +74,6 @@ const usersService = {
             return err;
         }
     }
-
-
 }
 
 module.exports = usersService;
