@@ -1,5 +1,7 @@
 const knex = require('../infra/database.js');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
 
 const usersService = {
 
@@ -13,7 +15,7 @@ const usersService = {
         }
     },
 
-    getUser: async (req) => {
+    getUser: (req) => {
         const id = req.params.id;
         try{
             const results = knex.select("id","name","email")
@@ -25,10 +27,11 @@ const usersService = {
         }
     },
     
-    createUser: (req) => {
+    registerUser: (req) => {
 
         const {name, email, password} = req;
-        const hashReturn = bcrypt.hashSync(password, 10);
+        const hashReturn = bcrypt.hashSync(password, 
+            Number(process.env.SALT));
 
         try{
             const results = knex("users")
@@ -41,21 +44,57 @@ const usersService = {
         }
     },
 
-    updateUserPasswd: (data) => {
-        const { id, email, password } = data;
+    login: async (data) => {
+        try{
+            const { email, password } = data;
 
-        const hashReturn = bcrypt.hashSync(password, 10);
-        const date = new Date();
+            
+            const queryPass = await knex.select("password", "id")
+                 .from("users")
+                 .where({email});
+                   
+            if(queryPass[0]){
+                const id = queryPass[0].id;
+                const dbPass = queryPass[0].password;
+
+                const hashValidate = bcrypt.compareSync(password, dbPass);        
+                if(hashValidate){
+                    const token = jwt
+                         .sign({id}, process.env.TOKEN_SECRET);
+                            
+                    const results = {'authorization-token': token};
+                    return results;
+                }
+                return new Error("email or password incorrect");
+            }
+
+            return new Error("email or password incorrect");
+            
+        }catch(err){
+            return err;
+        }
+
+    },
+
+    updateUserPasswd: async (data) => {
 
         try{
-            const results = knex("users")
-                .returning(["users.*"])
-                .where({id, email})
-                .update({
-                    password: hashReturn,
-                    updatedAt: date.toISOString()
-                });
-            return results;
+            const { id, email, password } = data;
+            const date = new Date();
+      
+            const hashReturn = bcrypt.hashSync(password,
+                Number(process.env.SALT));
+            
+            const updatedPassword = await knex("users")
+                 .returning(["id", "email"])
+                 .where({id, email})
+                 .update({
+                     password: hashReturn,
+                     updatedAt: date.toISOString()
+                  });
+                        
+            return updatedPassword;
+            
         }catch(err){
             return err;
         }

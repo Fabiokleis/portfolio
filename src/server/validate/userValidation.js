@@ -24,10 +24,27 @@ const UserValidator = {
         return UserSchema.validateAsync(body);
     },
 
+    loginUser: (data) => {
+        const UserSchema = Joi.object({
+            email: Joi.string()
+                .email()
+                .min(5)
+                .max(80)
+                .required(),
+            
+            password: Joi.string()
+                .min(8)
+                .max(80)
+                .required()
+        });
+        return UserSchema.validateAsync(data);
+    },
+
     updateUserPasswd: (data) => {
         const UserSchema = Joi.object({
-            id: Joi.string()
-                .pattern(new RegExp('^[1-9][0-9]{0,5}$'))
+            id: Joi.number()
+                .min(1)
+                .max(1000)
                 .required(),
 
             email: Joi.string()

@@ -1,14 +1,15 @@
 // Update with your config settings.
+require('dotenv').config({path: './server/.env'});
 
 module.exports = {
 
   development: {
     client: 'pg',
     connection: {
-      host: '127.0.0.1',
-      database: 'knex_portifolio',
-      user: 'postgres',
-      password: ''
+      host: process.env.HOST,
+      database: process.env.DBNAME,
+      user: process.env.DBUSER,
+      password: process.env.DBPASSWORD
     }
   },
 
