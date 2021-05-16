@@ -1,8 +1,21 @@
 const express = require('express');
 const app = express();
-const postsRoute = require('./route/postsRoute');
-const database = require('./infra/database');
+const usersRoute = require('./route/usersRoute');
 
-app.use('/', postsRoute);
+require('dotenv').config();
 
-app.listen(3000);
+app.use('/users', usersRoute);
+
+
+
+// TODO map all errors
+app.use((err, req, res, next) => {
+
+    res.status(err.statusCode).send(err.message);
+});
+
+
+app.listen(process.env.PORT, (err) => { 
+    console.log("connected");
+    if(err) throw err;
+});
