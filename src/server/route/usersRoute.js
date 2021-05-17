@@ -42,8 +42,9 @@ router.post('/login', express.json(), async(req, res, next) => {
    
         if(results["authorization-token"]){
             res.header(results);
-            res.status(200).send("User logged!").end();
+            res.status(200).send("User logged!");
         }
+        
         results.statusCode = 400;
         next(results);
     }catch(err){
@@ -62,7 +63,6 @@ router.put('/', express.json(), auth, async(req, res, next) => {
             .updateUserPasswd({id, email, password});
        
         const results = await usersService.updateUserPasswd(valueObj);
-        console.log(results);
         res.status(200).json(results); 
     }catch(err){
         err.statusCode = 400;
@@ -70,13 +70,17 @@ router.put('/', express.json(), auth, async(req, res, next) => {
     }
 });
 
-router.delete('/:id', async(req, res, next) => {
+router.delete('/', auth, async(req, res, next) => {
     try{
-        const results = await usersService.deleteUser(req); 
-       
+        const { id } = req.user;
+        const value = await UserValidator.deleteUser({id});
+        const results = await usersService.deleteUser(value);
+             
+        
         res.status(200).json(results);
+    
     }catch(err){
-        err.statusCode(404);
+        err.statusCode = 404;
         next(err);
     }
 });

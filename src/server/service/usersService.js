@@ -27,14 +27,14 @@ const usersService = {
         }
     },
     
-    registerUser: (req) => {
+    registerUser: async (req) => {
 
         const {name, email, password} = req;
         const hashReturn = bcrypt.hashSync(password, 
             Number(process.env.SALT));
 
         try{
-            const results = knex("users")
+            const results = await knex("users")
                 .returning(["id", "name", "email"])
                 .insert({name, email, password: hashReturn});
 
@@ -100,15 +100,20 @@ const usersService = {
         }
     },
 
-    deleteUser: (req) => {
-        const id = req.params.id;
+    deleteUser: async (data) => {
         try{
-            const results = knex("users")
-                .returning(["users.*"])
-                .where({id})
-                .del()
+            const { id } = data;
+
+            const results = await knex("users")
+                .returning(["id", "name", "email"])
+                .whereExists()
+                .del();
             
-            return results;
+            if(results[0]){
+                return results;
+            }
+            return new Error("token or id invalid");
+            
         }catch(err){
             return err;
         }

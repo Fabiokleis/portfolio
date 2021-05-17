@@ -61,6 +61,16 @@ const UserValidator = {
         });
         return UserSchema.validateAsync(data);
     },
+
+    deleteUser: (data) => {
+        const UserSchema = Joi.object({
+            id: Joi.number()
+                .min(1)
+                .max(1000)
+                .required(),
+        });
+        return UserSchema.validateAsync(data);
+    }
     
    
 }

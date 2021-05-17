@@ -6,9 +6,6 @@ require('dotenv').config();
 
 app.use('/users', usersRoute);
 
-
-
-// TODO map all errors
 app.use((err, req, res, next) => {
 
     res.status(err.statusCode).send(err.message);
