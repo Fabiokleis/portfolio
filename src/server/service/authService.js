@@ -7,6 +7,7 @@ module.exports = authUser = (req, res, next) => {
         req.user = userVerified;
         next();
     }catch(err){
+        err.statusCode = 400;
         next(err)
     }
 }

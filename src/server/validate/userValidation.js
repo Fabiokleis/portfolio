@@ -3,6 +3,17 @@ const Joi = require('joi');
 // validation layer to user
 
 const UserValidator = {
+    getUser: (body) => {
+        const UserSchema = Joi.object({
+            id: Joi.number()
+                .min(1)
+                .max(1000)
+                .required()
+        });
+
+        return UserSchema.validateAsync(body);
+    },
+
     createUser: (body) => {
         const UserSchema = Joi.object({
             name: Joi.string()
@@ -61,6 +72,16 @@ const UserValidator = {
         });
         return UserSchema.validateAsync(data);
     },
+
+    deleteUser: (data) => {
+        const UserSchema = Joi.object({
+            id: Joi.number()
+                .min(1)
+                .max(1000)
+                .required(),
+        });
+        return UserSchema.validateAsync(data);
+    }
     
    
 }

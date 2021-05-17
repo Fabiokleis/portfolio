@@ -7,7 +7,8 @@ A sample about my development skills
  * Nodejs
  * Express
  * Jest and Axios
- * knex and Postgres
+ * knex, Postgres and Joi
+ * dotenv, jsonwebtoken and bcrypt
 
 
 ### Front-end // in near future
