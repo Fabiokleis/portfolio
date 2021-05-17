@@ -4,19 +4,13 @@ const usersService = require('../service/usersService');
 const UserValidator = require('../validate/userValidation');
 const auth = require('../service/authService');
 
-router.get('/', express.json(), async(req, res, next) => {
-    try{
-        const results = await usersService.getUsers();
-        res.status(200).json(results);
-    }catch(err){
-        next(err);
-    }
-});
 
-router.get('/:id', async(req, res, next) => {
+router.get('/', auth, async(req, res, next) => {
     try{
-        const results = await usersService.getUser(req);
-       
+        const { id } = req.user;
+        const valueObj = await UserValidator.getUser({id});
+        const results = await usersService.getUser(valueObj);
+        
         res.status(200).json(results); 
     }catch(err){
         err.statusCode = 404;
@@ -45,7 +39,6 @@ router.post('/login', express.json(), async(req, res, next) => {
             res.status(200).send("User logged!");
         }
         
-        results.statusCode = 400;
         next(results);
     }catch(err){
         err.statusCode = 400;
