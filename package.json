@@ -1,6 +1,9 @@
 {
   "name": "src",
   "version": "1.0.0",
+  "engine":{
+      "node":"v16.1.0"
+  },
   "description": "nodejs app to portfolio",
   "main": "./src/server/server.js",
   "scripts": {
