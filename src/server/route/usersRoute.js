@@ -38,7 +38,7 @@ router.post('/login', express.json(), async(req, res, next) => {
             res.header(results);
             res.status(200).send("User logged!");
         }
-        
+        results.statusCode = 400; 
         next(results);
     }catch(err){
         err.statusCode = 400;
