@@ -4,6 +4,10 @@ const usersRoute = require('./route/usersRoute');
 
 require('dotenv').config({path: "/home/urameshi/ports_/portfolio/src/.env"});
 
+app.get('/', (req, res) => {
+    res.send("hello world");
+});
+
 app.use('/users', usersRoute);
 
 app.use((err, req, res, next) => {
