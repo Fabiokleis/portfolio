@@ -2,11 +2,11 @@
   "name": "src",
   "version": "1.0.0",
   "description": "nodejs app to portfolio",
-  "main": "./server/server.js",
+  "main": "./src/server/server.js",
   "scripts": {
     "test": "jest --env node",
-    "start": "node ./server/server.js/",
-    "dev": "nodemon /home/urameshi/ports_/portifolio/src/server/server.js"
+    "start": "node ./src/server/server.js",
+    "dev": "nodemon ./src/server/server.js"
   },
   "author": "fabiokleis",
   "license": "ISC",
