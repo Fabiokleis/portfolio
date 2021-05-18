@@ -1,13 +1,14 @@
 {
   "name": "src",
   "version": "1.0.0",
-  "description": "",
+  "description": "nodejs app to portfolio",
   "main": "./server/server.js",
   "scripts": {
     "test": "jest --env node",
-    "start": "nodemon /home/urameshi/ports_/portifolio/src/server/server.js"
+    "start": "node ./server/server.js/",
+    "dev": "nodemon /home/urameshi/ports_/portifolio/src/server/server.js"
   },
-  "author": "",
+  "author": "fabiokleis",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.21.1",
