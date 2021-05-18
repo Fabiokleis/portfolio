@@ -1,54 +1,46 @@
-const knex = require('../infra/database.js');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-
+const QueryBuilder = require('../data/dataAccess.js');
 
 const usersService = {
 
-    getUser: (data) => {
-        const { id } = data;
+    getUser: async (data) => {
         try{
-            const results = knex.select("id","name","email")
-                .from("users")
-                .where({id});
-
-            console.log(results);
+            const query = new QueryBuilder(data);
+            const results = await query.getUserById();
             return results;
         }catch(err){
             return err;
         }
     },
     
-    registerUser: async (req) => {
+    registerUser: async (data) => {
 
-        const {name, email, password} = req;
-        const hashReturn = bcrypt.hashSync(password, 
+        data.password = hashReturn = bcrypt.hashSync(data.password, 
             Number(process.env.SALT));
-
+        
         try{
-            const results = await knex("users")
-                .returning(["id", "name", "email"])
-                .insert({name, email, password: hashReturn});
-
-           return results;
+            const query = new QueryBuilder(data);
+            const results = await query.registerUser();
+            
+            return results;
         }catch(err){
             return err;
         }
     },
 
     login: async (data) => {
-        const { email, password } = data;
+      
         try{
                         
-            const queryPass = await knex.select("password", "id")
-                 .from("users")
-                 .where({email});
-                   
+            const query = new QueryBuilder(data);
+            const queryPass = await query.verifyUserEmail();
+            
             if(queryPass[0]){
                 const id = queryPass[0].id;
                 const dbPass = queryPass[0].password;
 
-                const hashValidate = bcrypt.compareSync(password, dbPass);        
+                const hashValidate = bcrypt.compareSync(data.password, dbPass);        
                 if(hashValidate){
                     const token = jwt
                          .sign({id}, process.env.TOKEN_SECRET);
@@ -68,21 +60,17 @@ const usersService = {
     },
 
     updateUserPasswd: async (data) => {
-        const { id, email, password } = data;
-        const date = new Date();
         try{
-            
-            const hashReturn = bcrypt.hashSync(password,
+            const date = new Date();                   
+            data.password = bcrypt.hashSync(data.password,
                 Number(process.env.SALT));
-            
-            const updatedPassword = await knex("users")
-                 .returning(["id", "email"])
-                 .where({id, email})
-                 .update({
-                     password: hashReturn,
-                     updatedAt: date.toISOString()
-                  });
-                        
+
+            data.date = date.toISOString;
+
+            const query = new QueryBuilder(data);
+            const updatedPassword = await query.updatePassword();
+
+                                  
             return updatedPassword;
             
         }catch(err){
@@ -91,12 +79,10 @@ const usersService = {
     },
 
     deleteUser: async (data) => {
-        const { id } = data;
+      
         try{
-            const results = await knex("users")
-                .returning(["id", "name", "email"])
-                .where({id})
-                .del();
+            const query = new QueryBuilder(data);
+            const results = await query.deleteUserById();
             
             return results;
         }catch(err){
