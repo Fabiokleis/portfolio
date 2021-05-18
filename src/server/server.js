@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const usersRoute = require('./route/usersRoute');
 
-require('dotenv').config({path: "/home/urameshi/ports_/portfolio/src/server/.env"});
+require('dotenv').config({path: "/home/urameshi/ports_/portfolio/src/.env"});
 
 app.use('/users', usersRoute);
 
