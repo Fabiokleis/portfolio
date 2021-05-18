@@ -12,7 +12,6 @@ const usersService = {
                 .from("users")
                 .where({id});
 
-            console.log(results);
             return results;
         }catch(err){
             return err;
@@ -80,7 +79,7 @@ const usersService = {
                  .where({id, email})
                  .update({
                      password: hashReturn,
-                     updatedAt: date.toISOString()
+                     updated_at: date.toISOString()
                   });
                         
             return updatedPassword;
