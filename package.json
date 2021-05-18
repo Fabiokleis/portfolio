@@ -1,7 +1,7 @@
 {
   "name": "src",
   "version": "1.0.0",
-  "engine": {
+  "engines": {
     "node": "v16.1.0"
   },
   "description": "nodejs app to portfolio",
