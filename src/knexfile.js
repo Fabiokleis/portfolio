@@ -8,7 +8,7 @@ module.exports = {
       database: process.env.DBNAME,
       user: process.env.DBUSER,
       password: process.env.DBPASSWORD,
-      ssl: true
+      ssl: {"rejectUnauthorized": false}
     }
   },
 
