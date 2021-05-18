@@ -5,22 +5,14 @@ const jwt = require('jsonwebtoken');
 
 const usersService = {
 
-    getUsers: () => {
-        try{
-            const results = knex.select("id", "name", "email")
-                .from("users");
-            return results;
-        }catch(err){
-            return err
-        }
-    },
-
-    getUser: (req) => {
-        const id = req.params.id;
+    getUser: (data) => {
+        const { id } = data;
         try{
             const results = knex.select("id","name","email")
                 .from("users")
                 .where({id});
+
+            console.log(results);
             return results;
         }catch(err){
             return err;
@@ -45,10 +37,9 @@ const usersService = {
     },
 
     login: async (data) => {
+        const { email, password } = data;
         try{
-            const { email, password } = data;
-
-            
+                        
             const queryPass = await knex.select("password", "id")
                  .from("users")
                  .where({email});
@@ -77,11 +68,10 @@ const usersService = {
     },
 
     updateUserPasswd: async (data) => {
-
+        const { id, email, password } = data;
+        const date = new Date();
         try{
-            const { id, email, password } = data;
-            const date = new Date();
-      
+            
             const hashReturn = bcrypt.hashSync(password,
                 Number(process.env.SALT));
             
@@ -101,19 +91,14 @@ const usersService = {
     },
 
     deleteUser: async (data) => {
+        const { id } = data;
         try{
-            const { id } = data;
-
             const results = await knex("users")
                 .returning(["id", "name", "email"])
-                .whereExists()
+                .where({id})
                 .del();
             
-            if(results[0]){
-                return results;
-            }
-            return new Error("token or id invalid");
-            
+            return results;
         }catch(err){
             return err;
         }

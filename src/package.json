@@ -4,7 +4,8 @@
   "description": "",
   "main": "./server/server.js",
   "scripts": {
-    "test": "jest --env node"
+    "test": "jest --env node",
+    "start": "nodemon /home/urameshi/ports_/portifolio/src/server/server.js"
   },
   "author": "",
   "license": "ISC",
