@@ -8,6 +8,7 @@ class UsersService {
         this.data = data;
     }
 
+
     async registerUser(){
         try{
             this.data.password = bcrypt.hashSync(this.data.password,
@@ -38,6 +39,7 @@ class UsersService {
 
                     const auth = {'authorization-token': token};
                     return auth;
+
                 }
                 return new Error("email or password incorrect");
             }
@@ -47,6 +49,7 @@ class UsersService {
             return err;
         }
     }
+
 
     async updateUserPasswd(){
         try{    
@@ -60,10 +63,12 @@ class UsersService {
             const user = await query.updatePassword();
             
             return user;
+
         }catch(err){
             return err;
         }
     }
+
 
     async getUser(){
         try{
@@ -84,7 +89,7 @@ class UsersService {
             return deletedUser;
         }catch(err){
             return err;
-        }
+        }    
     }
 }
 
