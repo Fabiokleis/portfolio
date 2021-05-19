@@ -7,6 +7,7 @@ app.get('/', (req, res) => {
     res.send("hello world");
 });
 
+
 app.use('/users', usersRoute);
 
 app.use((err, req, res, next) => {

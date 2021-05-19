@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const usersService = require('../service/usersService');
+const UsersService = require('../service/usersService');
 const UserValidator = require('../validate/userValidation');
 const auth = require('../service/authService');
 
@@ -9,7 +9,10 @@ router.get('/', auth, async(req, res, next) => {
     try{
         const { id } = req.user;
         const valueObj = await UserValidator.getUser({id});
-        const results = await usersService.getUser(valueObj);
+
+        const userService = new UsersService(valueObj);
+
+        const results = await userService.getUser();
         
         res.status(200).json(results); 
     }catch(err){
@@ -21,7 +24,9 @@ router.get('/', auth, async(req, res, next) => {
 router.post('/', express.json(), async(req, res, next) => { 
     try{
         const valueObj = await UserValidator.createUser(req.body); 
-        const results = await usersService.registerUser(valueObj);
+        const userService = new UsersService(valueObj);
+
+        const results = await userService.registerUser();
         res.status(201).send(results);
     }catch(err){
         err.statusCode = 400;
@@ -32,13 +37,16 @@ router.post('/', express.json(), async(req, res, next) => {
 router.post('/login', express.json(), async(req, res, next) => {
     try{
         const valueObj = await UserValidator.loginUser(req.body);
-        const results = await usersService.login(valueObj);
+        const userService = new UsersService(valueObj);
+        const results = await userService.login();
    
         if(results["authorization-token"]){
             res.header(results);
             res.status(200).send("User logged!");
         }
+
         results.statusCode = 400;
+
         next(results);
     }catch(err){
         err.statusCode = 400;
@@ -55,7 +63,8 @@ router.put('/', express.json(), auth, async(req, res, next) => {
         const valueObj = await UserValidator
             .updateUserPasswd({id, email, password});
        
-        const results = await usersService.updateUserPasswd(valueObj);
+        const userService = new UsersService(valueObj);
+        const results = await userService.updateUserPasswd();
         res.status(200).json(results); 
     }catch(err){
         err.statusCode = 400;
@@ -67,7 +76,8 @@ router.delete('/', auth, async(req, res, next) => {
     try{
         const { id } = req.user;
         const value = await UserValidator.deleteUser({id});
-        const results = await usersService.deleteUser(value);
+        const userService = new UsersService(value);
+        const results = await userService.deleteUser();
              
         
         res.status(200).json(results);

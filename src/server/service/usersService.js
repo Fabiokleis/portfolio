@@ -1,79 +1,68 @@
-const knex = require('../infra/database.js');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const QueryBuilder = require('../data/dataAccess.js');
 
 
-const usersService = {
+class UsersService {
+    constructor(data){
+        this.data = data;
+    }
 
-    getUser: (data) => {
-        const { id } = data;
+
+    async registerUser(){
         try{
-            const results = knex.select("id","name","email")
-                .from("users")
-                .where({id});
+            this.data.password = bcrypt.hashSync(this.data.password,
+                Number(process.env.SALT));
+
+            const query = new QueryBuilder(this.data);
+            const userCreated = await query.registerUser();
 
             return results;
+
         }catch(err){
             return err;
         }
-    },
-    
-    registerUser: async (req) => {
-
-        const {name, email, password} = req;
-        const hashReturn = bcrypt.hashSync(password, 
-            Number(process.env.SALT));
-
+    }
+   
+    async login(){
         try{
-            const results = await knex("users")
-                .returning(["id", "name", "email"])
-                .insert({name, email, password: hashReturn});
+            const query = new QueryBuilder(this.data);
+            const user = await query.verifyUserEmail();
+            const flag = user[0] ? true : false;
+            if(flag && Object.values(user[0]).indexOf(this.data.email) === 1){
+                const hashValidation = bcrypt.compareSync(this.data.password,
+                    user[0].password);
+                
+                if(hashValidation){
+                    
+                    const token = jwt.sign({id: user[0].id}, 
+                        process.env.TOKEN_SECRET);
 
-           return results;
-        }catch(err){
-            return err;
-        }
-    },
+                    const auth = {'authorization-token': token};
+                    return auth;
 
-    login: async (data) => {
-        const { email, password } = data;
-        try{
-                        
-            const queryPass = await knex.select("password", "id")
-                 .from("users")
-                 .where({email});
-                   
-            if(queryPass[0]){
-                const id = queryPass[0].id;
-                const dbPass = queryPass[0].password;
-
-                const hashValidate = bcrypt.compareSync(password, dbPass);        
-                if(hashValidate){
-                    const token = jwt
-                         .sign({id}, process.env.TOKEN_SECRET);
-                            
-                    const results = {'authorization-token': token};
-                    return results;
                 }
                 return new Error("email or password incorrect");
             }
 
             return new Error("email or password incorrect");
-            
         }catch(err){
             return err;
         }
+    }
 
-    },
 
-    updateUserPasswd: async (data) => {
-        const { id, email, password } = data;
-        const date = new Date();
-        try{
-            
-            const hashReturn = bcrypt.hashSync(password,
+    async updateUserPasswd(){
+        try{    
+            const date = new Date();
+            this.data.password = bcrypt.hashSync(this.data.password,
                 Number(process.env.SALT));
-            
+
+            this.data.date = date.toISOString();
+
+            const query = new QueryBuilder(this.data);
+            const user = await query.updatePassword();
+
             const updatedPassword = await knex("users")
                  .returning(["id", "email"])
                  .where({id, email})
@@ -84,24 +73,35 @@ const usersService = {
                         
             return updatedPassword;
             
-        }catch(err){
-            return err;
-        }
-    },
 
-    deleteUser: async (data) => {
-        const { id } = data;
-        try{
-            const results = await knex("users")
-                .returning(["id", "name", "email"])
-                .where({id})
-                .del();
-            
-            return results;
         }catch(err){
             return err;
         }
     }
+
+
+    async getUser(){
+        try{
+            const query = new QueryBuilder(this.data);
+            const user = await query.getUserById();
+
+            return user;
+        }catch(err){
+            return err;
+        }
+    }
+
+    async deleteUser(){
+        try{
+            const query = new QueryBuilder(this.data);
+            const deletedUser = await query.deleteUserById();
+
+            return deletedUser;
+        }catch(err){
+            return err;
+        }    
+    }
 }
 
-module.exports = usersService;
+module.exports = UsersService;
+
