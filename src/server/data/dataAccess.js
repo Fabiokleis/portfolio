@@ -31,7 +31,7 @@ class UserQueryBuilder {
     }
     
     verifyUserEmail(){
-        const queryReturn = knex.select("password", "id")
+        const queryReturn = knex.select("id", "email", "password")
             .from("users")
             .where({email: this.email});
 
@@ -49,7 +49,6 @@ class UserQueryBuilder {
                 password: this.password,
                 updated_at: this.date
             });
-
         return queryReturn;
     }
     
