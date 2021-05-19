@@ -1,5 +1,4 @@
 // Update with your config settings.
-require('dotenv').config({path: '/home/urameshi/ports_/portfolio/src/.env'});
 
 module.exports = {
 
@@ -9,7 +8,8 @@ module.exports = {
       host: process.env.HOST,
       database: process.env.DBNAME,
       user: process.env.DBUSER,
-      password: process.env.DBPASSWORD
+      password: process.env.DBPASSWORD,
+      ssl: {"rejectUnauthorized": false}
     }
   },
 
