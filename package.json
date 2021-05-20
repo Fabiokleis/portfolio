@@ -23,7 +23,7 @@
     "knex": "^0.95.5",
     "pg": "^8.6.0"
   },
-  "devDependencies":{
-     "dotenv": "^9.0.2"
+  "devDependencies": {
+    "dotenv": "^9.0.2"
   }
 }
