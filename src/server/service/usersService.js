@@ -17,7 +17,8 @@ class UsersService {
             const query = new QueryBuilder(this.data);
             const userCreated = await query.registerUser();
 
-            return userCreated;
+            return results;
+
         }catch(err){
             return err;
         }
@@ -61,8 +62,17 @@ class UsersService {
 
             const query = new QueryBuilder(this.data);
             const user = await query.updatePassword();
+
+            const updatedPassword = await knex("users")
+                 .returning(["id", "email"])
+                 .where({id, email})
+                 .update({
+                     password: hashReturn,
+                     updated_at: date.toISOString()
+                  });
+                        
+            return updatedPassword;
             
-            return user;
 
         }catch(err){
             return err;
