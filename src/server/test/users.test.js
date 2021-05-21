@@ -1,10 +1,12 @@
 const axios = require('axios');
 const crypto = require('crypto');
 
-// TODO create a function or adjust generate to return valid string
-
 const generate = () => {
-    return crypto.randomBytes(20).toString('hex');
+    const password = crypto.randomBytes(20).toString('ascii');
+    const name = "user_"+crypto.randomBytes(10).toString('hex');
+    const email = "user_"+crypto.randomBytes(10).toString('hex')+"@gmail.com";
+
+    return {name, email, password};
 }
 
 
@@ -27,48 +29,44 @@ const generateRequest = async (url, method, post) => {
 }
 
 const base_url = "http://127.0.0.1:3000/users";
-const data = {name: generate(), email: generate(), password: generate()};
+const data = generate();
 
 
-test("Should get a user", async () => {
-    const response = await generateRequest(base_url, "GET");
-    const id = response.data[(response.data.length-1)].id;
-    const getUser = await generateRequest(`${base_url}/${id}`, "GET");
-
-    expect(response.status).toBe(200);
-    expect(getUser.status).toBe(200);
-    expect(getUser.data[0].id).toBe(id);
-});
-
-
-test("Should create a user", async () => {
-    const response = await generateRequest(base_url, "POST", data);
-    const getUsers = await generateRequest(base_url, "GET");
-    const id = getUsers.data[(getUsers.data.length-1)].id;
+test("Should register user", async () => {
+    const userResponse = await generateRequest(base_url, "POST", data);
    
-    expect(response.status).toBe(201);
-    expect(getUsers.status).toBe(200);
-    expect(response.data[0].id).toBe(id);
+    expect(userResponse.status).toBe(201);
 });
 
-test("Should update a user", async () => {
-    const getUsers = await generateRequest(base_url, "GET");
-    const id = getUsers.data[(getUsers.data.length-1)].id;
-    const response = await generateRequest(`${base_url}/${id}`, "PUT", {name: data.name});
+test("Should login user", async () => {
+    const loginResponse = await generateRequest(`${base_url}/login`, 
+        "POST", {email: data.email, password: data.password});
     
-    expect(response.status).toBe(200);
-    expect(getUsers.status).toBe(200);
-    expect(response.data[0].id).toBe(id);
+    const jwt = loginResponse.headers["authorization-token"];
+    axios.defaults.headers["authorization-token"] = jwt;
+
+    expect(loginResponse.status).toBe(200);
 });
 
-test("Should delete a user", async () => {
-    const getUsers = await generateRequest(base_url, "GET");
-    const id = getUsers.data[(getUsers.data.length-1)].id;
-    const response = await generateRequest(`${base_url}/${id}`, "DELETE");
-
-    expect(response.status).toBe(200);
-    expect(getUsers.status).toBe(200);
-    expect(response.data[0].id).toBe(id);
+test("Should get user", async () => {
+    const getResponse = await generateRequest(base_url, "GET");
+    
+    expect(getResponse.status).toBe(200);
 });
 
+test("Should update user", async () => {
+    const newData = generate();
+    const updateResponse = await generateRequest(base_url,
+        "PUT", {email: data.email, password: newData.password});
+
+    expect(updateResponse.status).toBe(200);
+
+});
+
+
+test("Should delete user", async () => {
+    const deleteResponse = await generateRequest(base_url, "DELETE");
+
+    expect(deleteResponse.status).toBe(200);
+});
 
