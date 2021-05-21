@@ -10,7 +10,3 @@ A sample about my development skills, deploy on heroku -> [fabiokleis.herokuapp]
  * knex, Postgres and Joi
  * dotenv, jsonwebtoken and bcrypt
 
-
-### Front-end // in near future
-
- * React
