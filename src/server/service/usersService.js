@@ -2,20 +2,21 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const QueryBuilder = require('../data/dataAccess.js');
 
-
 class UsersService {
     constructor(data){
         this.data = data;
     }
 
-
     async registerUser(){
+
         try{
+
             this.data.password = bcrypt.hashSync(this.data.password,
                 Number(process.env.SALT));
-
-            const query = new QueryBuilder(this.data);
-            const userCreated = await query.registerUser();
+            
+            const Query = new QueryBuilder(this.data);
+            
+            const userCreated = await Query.registerUser();
 
             return userCreated;
         }catch(err){
@@ -25,15 +26,16 @@ class UsersService {
    
     async login(){
         try{
-            const query = new QueryBuilder(this.data);
-            const user = await query.verifyUserEmail();
+            const Query = new QueryBuilder(this.data);
+            const user = await Query.verifyUserEmail();
+            
             const flag = user[0] ? true : false;
+            
             if(flag && Object.values(user[0]).indexOf(this.data.email) === 1){
                 const hashValidation = bcrypt.compareSync(this.data.password,
                     user[0].password);
-                
                 if(hashValidation){
-                    
+                   
                     const token = jwt.sign({id: user[0].id}, 
                         process.env.TOKEN_SECRET);
 
@@ -58,9 +60,8 @@ class UsersService {
                 Number(process.env.SALT));
 
             this.data.date = date.toISOString();
-
-            const query = new QueryBuilder(this.data);
-            const user = await query.updatePassword();
+            const Query = new QueryBuilder(this.data);
+            const user = await Query.updatePassword();
             
             return user;
 
@@ -72,8 +73,8 @@ class UsersService {
 
     async getUser(){
         try{
-            const query = new QueryBuilder(this.data);
-            const user = await query.getUserById();
+            const Query = new QueryBuilder(this.data);
+            const user = await Query.getUserById();
 
             return user;
         }catch(err){
@@ -83,8 +84,8 @@ class UsersService {
 
     async deleteUser(){
         try{
-            const query = new QueryBuilder(this.data);
-            const deletedUser = await query.deleteUserById();
+            const Query = new QueryBuilder(this.data);
+            const deletedUser = await Query.deleteUserById();
 
             return deletedUser;
         }catch(err){

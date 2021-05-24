@@ -54,7 +54,7 @@ test("Should get user", async () => {
     expect(getResponse.status).toBe(200);
 });
 
-test("Should update user", async () => {
+test.skip("Should update user", async () => {
     const newData = generate();
     const updateResponse = await generateRequest(base_url,
         "PUT", {email: data.email, password: newData.password});
@@ -64,7 +64,7 @@ test("Should update user", async () => {
 });
 
 
-test("Should delete user", async () => {
+test.skip("Should delete user", async () => {
     const deleteResponse = await generateRequest(base_url, "DELETE");
 
     expect(deleteResponse.status).toBe(200);

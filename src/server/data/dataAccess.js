@@ -35,7 +35,6 @@ class UserQueryBuilder {
         const queryReturn = knex.select("id", "email", "password")
             .from("users")
             .where({email: this.email});
-
         return queryReturn;
     }
 
