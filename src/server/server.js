@@ -1,14 +1,14 @@
 const express = require('express');
 const app = express();
 const usersRoute = require('./route/usersRoute');
+const cors = require('cors');
 
+const corsOpt = {
+    origin: 'https://fabiokleis.herokuapp.com',
+    optionsSuccessStatus: 200
+}
 
-app.get('/', (req, res) => {
-    res.send("hello world");
-});
-
-
-app.use('/users', usersRoute);
+app.use('/users', cors(corsOpt),usersRoute);
 
 app.use((err, req, res, next) => {
 
