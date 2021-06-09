@@ -3,7 +3,12 @@ const router = express.Router();
 const UsersService = require('../service/usersService');
 const UserValidator = require('../validate/userValidation');
 const auth = require('../service/authService');
+const cors = require('cors');
 
+const options = {
+    origin: 'https://fabiokleis.herokuapp.com'
+}
+router.use(cors(options));
 
 router.get('/', auth, async(req, res, next) => {
     try{
