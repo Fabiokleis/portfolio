@@ -7,8 +7,7 @@ const coreOpt = {
     origin: 'https://fabiokleis.herokuapp.com'
 }
 
-app.use(cors(coreOpt));
-app.use('/users', usersRoute);
+app.use('/users', cors(coreOpt),usersRoute);
 
 app.use((err, req, res, next) => {
 
