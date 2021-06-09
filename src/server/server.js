@@ -12,6 +12,6 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(process.env.PORT, (err) => { 
-    console.log("connected");
+    console.log("connected, running on ", process.env.PORT);
     if(err) throw err;
 });

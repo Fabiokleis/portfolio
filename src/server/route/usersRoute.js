@@ -12,8 +12,7 @@ router.get('/', auth, async(req, res, next) => {
 
         const userService = new UsersService(valueObj);
 
-        const results = await userService.getUser();
-        
+        const results = await userService.getUser(); 
         res.status(200).json(results); 
     }catch(err){
         err.statusCode = 404;
@@ -21,11 +20,11 @@ router.get('/', auth, async(req, res, next) => {
     }
 });
 
-router.post('/', express.json(), async(req, res, next) => { 
+router.post('/', express.json(), express.urlencoded({extended: true}), async(req, res, next) => { 
     try{
         const valueObj = await UserValidator.createUser(req.body); 
         const userService = new UsersService(valueObj);
-
+        console.log(req.body);
         const results = await userService.registerUser();
         res.status(201).send(results);
     }catch(err){
@@ -34,7 +33,7 @@ router.post('/', express.json(), async(req, res, next) => {
     }
 });
 
-router.post('/login', express.json(), async(req, res, next) => {
+router.post('/login', express.json(), express.urlencoded({extended: true}),async(req, res, next) => {
     try{
         const valueObj = await UserValidator.loginUser(req.body);
         const userService = new UsersService(valueObj);
