@@ -27,7 +27,7 @@ router.get('/', auth, async(req, res, next) => {
     }
 });
 
-router.post('/', express.json(), express.urlencoded({extended: true}),async(req, res, next) => { 
+router.post('/', express.json(), express.urlencoded({extended: true}), async(req, res, next) => { 
     try{
         const valueObj = await UserValidator.createUser(req.body); 
         const userService = new UsersService(valueObj);
