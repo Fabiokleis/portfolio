@@ -3,8 +3,13 @@ const router = express.Router();
 const UsersService = require('../service/usersService');
 const UserValidator = require('../validate/userValidation');
 const auth = require('../service/authService');
+const cors = require('cors');
 
+const options = {
+    origin: 'http://127.0.0.1:3000'
+}
 
+router.use(cors(options));
 router.get('/', auth, async(req, res, next) => {
     try{
         const { id } = req.user;
@@ -20,7 +25,7 @@ router.get('/', auth, async(req, res, next) => {
     }
 });
 
-router.post('/', express.json(), express.urlencoded({extended: true}), async(req, res, next) => { 
+router.post('/', express.json(), async(req, res, next) => { 
     try{
         const valueObj = await UserValidator.createUser(req.body); 
         const userService = new UsersService(valueObj);
