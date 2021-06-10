@@ -10,17 +10,13 @@ class UsersService {
     async registerUser(){
 
         try{
-
             this.data.password = bcrypt.hashSync(this.data.password,
-                Number(process.env.SALT));
-            
+               Number(process.env.SALT));
             const Query = new QueryBuilder(this.data);
-            
             const userCreated = await Query.registerUser();
-
             return userCreated;
         }catch(err){
-            return err;
+            throw err;
         }
     }
    

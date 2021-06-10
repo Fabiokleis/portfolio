@@ -6,7 +6,7 @@ const auth = require('../service/authService');
 const cors = require('cors');
 
 const options = {
-    origin: 'http://127.0.0.1:3000'
+    origin: 'http://127.0.0.1:3000/'
 }
 
 router.use(cors(options));
@@ -27,11 +27,10 @@ router.get('/', auth, async(req, res, next) => {
 
 router.post('/', express.json(), async(req, res, next) => { 
     try{
-        const valueObj = await UserValidator.createUser(req.body); 
+        const valueObj = await UserValidator.createUser(req.body);
         const userService = new UsersService(valueObj);
-        console.log(req.body);
         const results = await userService.registerUser();
-        res.status(201).send(results);
+        res.status(201).json(results);
     }catch(err){
         err.statusCode = 400;
         next(err);

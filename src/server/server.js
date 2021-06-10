@@ -7,8 +7,7 @@ require('dotenv').config({path: "/home/urameshi/ports_/portfolio/src/.env"});
 app.use('/users', usersRoute);
 
 app.use((err, req, res, next) => {
-
-    res.status(err.statusCode).send(err.message);
+    res.status(err.statusCode).json(err);
 });
 
 app.listen(process.env.PORT, (err) => { 
