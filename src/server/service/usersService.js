@@ -24,27 +24,27 @@ class UsersService {
         try{
             const Query = new QueryBuilder(this.data);
             const user = await Query.verifyUserEmail();
-            
-            const flag = user[0] ? true : false;
-            
-            if(flag && Object.values(user[0]).indexOf(this.data.email) === 1){
-                const hashValidation = bcrypt.compareSync(this.data.password,
-                    user[0].password);
+            const flag = user['0']?true:false;
+            if(flag && Object.values(user['0']).indexOf(this.data.email)){
+                const [id, email, password] = Object.values(user['0']);
+                const hashValidation = bcrypt
+                    .compareSync(this.data.password, password);
+                
                 if(hashValidation){
-                   
-                    const token = jwt.sign({id: user[0].id}, 
-                        process.env.TOKEN_SECRET);
+                    const token = jwt.sign({id, email}, process.env.TOKEN_SECRET);
 
-                    const auth = {'authorization-token': token};
+                    const auth = {'Authorization': token};
+    
                     return auth;
-
                 }
-                return new Error("email or password incorrect");
-            }
+                throw new Error('email or password wrong');
 
-            return new Error("email or password incorrect");
+             }
+
+             throw new Error('email or password wrong');
+        
         }catch(err){
-            return err;
+            throw err;
         }
     }
 
