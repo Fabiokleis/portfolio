@@ -5,7 +5,7 @@ const cors = require('cors');
 const options = {
     origin: 'https://fabiokleis.herokuapp.com',
     optionsSuccesStatus: 200,
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowerHeaders: ['Content-Type', 'Authorization'],
     exposedHeaders: ['Content-Type', 'Authorization']
 }
 
