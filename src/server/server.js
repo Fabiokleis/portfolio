@@ -3,9 +3,9 @@ const app = express();
 const usersRoute = require('./route/usersRoute');
 const cors = require('cors');
 const options = {
-    origin: 'https://https://fabiokleis.herokuapp.com',
+    origin: 'https://fabiokleis.herokuapp.com',
     optionsSuccesStatus: 200,
-    allowerHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
     exposedHeaders: ['Content-Type', 'Authorization']
 }
 
