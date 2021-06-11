@@ -11,6 +11,4 @@ A sample about my development skills, deploy on heroku -> [fabiokleis.herokuapp]
  * dotenv, jsonwebtoken and bcrypt
 
 
-### Front-end // in near future
-
- * React
+### Front-end go to repo -> [react_portfolio](https://github.com/Fabiokleis/react_portfolio)

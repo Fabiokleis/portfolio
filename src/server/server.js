@@ -5,7 +5,7 @@ const cors = require('cors');
 const options = {
     origin: 'https://https://fabiokleis.herokuapp.com',
     optionsSuccesStatus: 200,
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowerHeaders: ['Content-Type', 'Authorization'],
     exposedHeaders: ['Content-Type', 'Authorization']
 }
 
@@ -21,7 +21,7 @@ app.use((err, req, res, next) => {
         msg.message = err.message
     }
 
-    res.status(err.statusCode).json(err);
+    res.status(err.statusCode).json(msg);
 });
 
 app.listen(process.env.PORT, (err) => { 
