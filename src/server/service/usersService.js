@@ -14,40 +14,39 @@ class UsersService {
             this.data.password = bcrypt.hashSync(this.data.password,
                 Number(process.env.SALT));
 
-            const query = new QueryBuilder(this.data);
-            const userCreated = await query.registerUser();
+            const Query = new QueryBuilder(this.data);
+            const userCreated = await Query.registerUser();
 
-            return results;
+            return userCreated;
 
         }catch(err){
-            return err;
+            return throw;
         }
     }
    
     async login(){
         try{
-            const query = new QueryBuilder(this.data);
-            const user = await query.verifyUserEmail();
-            const flag = user[0] ? true : false;
-            if(flag && Object.values(user[0]).indexOf(this.data.email) === 1){
+            const Query = new QueryBuilder(this.data);
+            const user = await Query.verifyUserEmail();
+            const flag = user['0'] ? true : false;
+            if(flag && Object.values(user['0']).indexOf(this.data.email) === 1){
                 const hashValidation = bcrypt.compareSync(this.data.password,
                     user[0].password);
                 
                 if(hashValidation){
                     
-                    const token = jwt.sign({id: user[0].id}, 
+                    const token = jwt.sign({id, email}, 
                         process.env.TOKEN_SECRET);
 
-                    const auth = {'authorization-token': token};
+                    const auth = {'Authorization': token};
                     return auth;
-
                 }
-                return new Error("email or password incorrect");
+                throw new Error("email or password incorrect");
             }
 
-            return new Error("email or password incorrect");
+            throw new Error("email or password incorrect");
         }catch(err){
-            return err;
+            throw err;
         }
     }
 
