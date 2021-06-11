@@ -20,7 +20,7 @@ class UsersService {
             return userCreated;
 
         }catch(err){
-            return throw;
+            throw err;
         }
     }
    
