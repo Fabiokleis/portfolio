@@ -4,9 +4,9 @@ const usersRoute = require('./route/usersRoute');
 
 
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', 'https://fabiokleis.herokuapp.com');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Origin');
-    res.header('Access-Control-Allow-Methods', 'OPTIONS, POST, GET, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Origin', 'https://fabiokleis.herokuapp.com');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Origin');
+    res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, POST, GET, PUT, DELETE');
     
     res.next();
 });
