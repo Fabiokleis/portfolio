@@ -4,7 +4,6 @@ const UsersService = require('../service/usersService');
 const UserValidator = require('../validate/userValidation');
 const auth = require('../service/authService');
 
-
 router.get('/', auth, async(req, res, next) => {
     try{
         const { id } = req.user;
@@ -25,9 +24,8 @@ router.post('/', express.json(), async(req, res, next) => {
     try{
         const valueObj = await UserValidator.createUser(req.body); 
         const userService = new UsersService(valueObj);
-
         const results = await userService.registerUser();
-        res.status(201).send(results);
+        res.status(201).json(results);
     }catch(err){
         err.statusCode = 400;
         next(err);
@@ -39,15 +37,9 @@ router.post('/login', express.json(), async(req, res, next) => {
         const valueObj = await UserValidator.loginUser(req.body);
         const userService = new UsersService(valueObj);
         const results = await userService.login();
-   
-        if(results["authorization-token"]){
-            res.header(results);
-            res.status(200).send("User logged!");
-        }
+        res.header(results);
+        res.status(200).send("User logged!");
 
-        results.statusCode = 400;
-
-        next(results);
     }catch(err){
         err.statusCode = 400;
         next(err);
