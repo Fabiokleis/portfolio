@@ -9,8 +9,8 @@ const options = {
     exposedHeaders: ['Content-Type', 'Authorization']
 }
 
-
-app.use('/users', cors(options), usersRoute);
+app.use(cors(options));
+app.use('/users', usersRoute);
 
 app.use((err, req, res, next) => {
     let msg = {};
