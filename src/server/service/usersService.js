@@ -30,13 +30,12 @@ class UsersService {
             const user = await Query.verifyUserEmail();
             const flag = user['0'] ? true : false;
             if(flag && Object.values(user['0']).indexOf(this.data.email) === 1){
-                const hashValidation = bcrypt.compareSync(this.data.password,
-                    user[0].password);
+                const [id, email, password] = Object.values(user['0']);
+                const hashValidation = bcrypt
+                    .compareSync(this.data.password, password);
                 
                 if(hashValidation){
-                    
-                    const token = jwt.sign({id, email}, 
-                        process.env.TOKEN_SECRET);
+                    const token = jwt.sign({id, email}, process.env.TOKEN_SECRET);
 
                     const auth = {'Authorization': token};
                     return auth;
