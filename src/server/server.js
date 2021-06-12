@@ -1,17 +1,14 @@
 const express = require('express');
 const app = express();
 const usersRoute = require('./route/usersRoute');
-const cors = require('cors');
-const options = {
-    'origin': 'https://fabiokleis.herokuapp.com',
-    'optionsSucessStatus': 200,
-    'methods': ['GET', 'PUT', 'POST', 'OPTIONS', 'DELETE'],
-    'preflightContinue': true,
-    'allowedHeaders': ['Content-Type', 'Authorization'],
-    'exposedHeaders': ['Content-Type', 'Authorization']
-}
 
-app.use(cors(options));
+
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', 'https://fabiokleis.herokuapp.com');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Origin');
+    res.next();
+});
+
 app.use('/users', usersRoute);
 
 app.use((err, req, res, next) => {
