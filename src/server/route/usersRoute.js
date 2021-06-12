@@ -38,7 +38,7 @@ router.post('/login', express.json(), async(req, res, next) => {
         const userService = new UsersService(valueObj);
         const results = await userService.login();
         res.header(results);
-        res.status(200).send("User logged!");
+        res.status(200).json({message: "User logged!"});
 
     }catch(err){
         err.statusCode = 400;
