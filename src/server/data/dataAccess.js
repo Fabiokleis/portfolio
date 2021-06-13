@@ -43,7 +43,7 @@ class UserQueryBuilder {
     saveToken(id, email){
 
         const queryReturn = knex("users")
-            .returning(["id","reset_token","token_date"])
+            .returning(["name", "email","reset_token","token_date"])
             .where({
                 id,
                 email
