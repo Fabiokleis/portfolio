@@ -45,6 +45,20 @@ router.post('/login', express.json(), async(req, res, next) => {
     }
 });
 
+router.post('/forgot_password', express.json(), async(req, res, next) => {
+    try {
+        const valueObj = await UserValidator.forgot_password(req.body);
+        const userService = new UsersService(valueObj);
+        const results = await userService.forgot_password();
+        res.status(200).json(results);
+    }catch(err){
+        err.statusCode = 404;
+        next(err);
+    }
+
+})
+
+
 router.put('/', express.json(), auth, async(req, res, next) => {
     try{
         const { id } = req.user;

@@ -73,6 +73,17 @@ const UserValidator = {
         return UserSchema.validateAsync(data);
     },
 
+    forgot_password: (data) => {
+        const UserSchema = Joi.object({
+            email: Joi.string()
+                .email()
+                .min(5)
+                .max(80)
+                .required()
+        });
+        return UserSchema.validateAsync(data);
+    },
+
     deleteUser: (data) => {
         const UserSchema = Joi.object({
             id: Joi.number()
