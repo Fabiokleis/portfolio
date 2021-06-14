@@ -81,7 +81,7 @@ class UsersService {
             this.data.password = bcrypt.hashSync(this.data.password,
                 Number(process.env.SALT));
 
-            this.data.date = date.toISOString();
+            this.data.date = date;
             const Query = new QueryBuilder(this.data);
             const user = await Query.updatePassword();
             
