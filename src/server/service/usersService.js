@@ -96,11 +96,20 @@ class UsersService {
     async getUser(){
         try{
             const Query = new QueryBuilder(this.data);
-            const user = await Query.getUserById();
+            const user = await Query.getUser();
+            const flag = user['0']?true:false;
+           if(flag && Object.values(user['0']).indexOf(this.data.email) === 0){  
+                const {email, reset_token, token_date} = user['0'];
+                const now = new Date();
+                if((token_date.getDate() === now.getDate()) && token_date.getHours() > now.getHours()){
+                    return {message: "token not expired! continue"};
+                }
+                throw new Error("token expired, try again!");
+            }
 
-            return user;
+            throw new Error("token wrong!");
         }catch(err){
-            return err;
+            throw err;
         }
     }
 

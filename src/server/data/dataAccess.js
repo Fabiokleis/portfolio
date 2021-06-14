@@ -12,10 +12,10 @@ class UserQueryBuilder {
         this.token_date = data.token_date;
     }
 
-    getUserById(){
-        const queryReturn = knex.select("id", "name", "email")
+    getUser(){
+        const queryReturn = knex.select("email", "reset_token", "token_date")
             .from("users")
-            .where({id: this.id});
+            .where({email: this.email, reset_token: this.reset_token});
 
         return queryReturn;
     }
@@ -43,7 +43,7 @@ class UserQueryBuilder {
     saveToken(id, email){
 
         const queryReturn = knex("users")
-            .returning(["name", "email","reset_token","token_date"])
+            .returning(["name", "email", "reset_token", "token_date"])
             .where({
                 id,
                 email

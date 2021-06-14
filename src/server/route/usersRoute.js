@@ -7,13 +7,10 @@ const auth = require('../service/authService');
 const ejs = require('ejs');
 
 
-router.get('/', auth, async(req, res, next) => {
+router.get('/', express.urlencoded({extended: true}), async(req, res, next) => {
     try{
-        const { id } = req.user;
-        const valueObj = await UserValidator.getUser({id});
-
+        const valueObj = await UserValidator.getUser(req.query);
         const userService = new UsersService(valueObj);
-
         const results = await userService.getUser(); 
         res.status(200).json(results); 
     }catch(err){
@@ -81,14 +78,10 @@ router.post('/forgot_password', express.json(), async(req, res, next) => {
 })
 
 
-router.put('/', express.json(), auth, async(req, res, next) => {
+router.put('/', express.json(), async(req, res, next) => {
     try{
-        const { id } = req.user;
-        const { email } = req.body;
-        const { password } = req.body;
-
         const valueObj = await UserValidator
-            .updateUserPasswd({id, email, password});
+            .updateUserPasswd(req.body);
        
         const userService = new UsersService(valueObj);
         const results = await userService.updateUserPasswd();
