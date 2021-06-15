@@ -66,8 +66,8 @@ class UsersService {
                 const savedToken = Query.saveToken(
                     id, 
                     email,
-                    this.reset_token,
-                    this.token_date
+                    this.data.reset_token,
+                    this.data.token_date
                 );
 
                 return savedToken;                
@@ -107,7 +107,7 @@ class UsersService {
 
     async getUser(){
         try{
-            const user = await Query.getUser(this.email, this.reset_token);
+            const user = await Query.getUser(this.data.email, this.data.reset_token);
             const flag = user['0']?true:false;
            if(flag && Object.values(user['0']).indexOf(this.data.email) === 0){  
                 const {email, reset_token, token_date} = user['0'];

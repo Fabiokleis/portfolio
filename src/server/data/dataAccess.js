@@ -31,7 +31,6 @@ const Query = {
     },
 
     saveToken: function(id, email, reset_token, token_date){
-
         const queryReturn = knex("users")
             .returning(["name", "email", "reset_token", "token_date"])
             .where({
