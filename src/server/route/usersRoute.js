@@ -62,8 +62,7 @@ router.post('/forgot_password', express.json(), async(req, res, next) => {
                         if(err) {
                             console.log(err);
                         }else{
-                            res.status(200).json({message: "link has send to email!"})
-                            console.log('Email send successfully!');
+                            res.status(200).json(results);
                         }
                     });
                 }
