@@ -1,8 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const QueryBuilder = require('../data/dataAccess.js');
+const Query = require('../data/dataAccess.js');
 const crypto = require('crypto');
-
 class UsersService {
     constructor(data){
         this.data = data;
@@ -13,8 +12,13 @@ class UsersService {
         try{
             this.data.password = bcrypt.hashSync(this.data.password,
                Number(process.env.SALT));
-            const Query = new QueryBuilder(this.data);
-            const userCreated = await Query.registerUser();
+
+            const userCreated = await Query.registerUser(
+                    this.data.name,
+                    this.data.email,
+                    this.data.password
+            );
+
             return userCreated;
         }catch(err){
             throw err;
@@ -23,8 +27,7 @@ class UsersService {
    
     async login(){
         try{
-            const Query = new QueryBuilder(this.data);
-            const user = await Query.verifyUserEmail();
+            const user = await Query.verifyUserEmail(this.data.email);
             const flag = user['0']?true:false;
             if(flag && Object.values(user['0']).indexOf(this.data.email)){
                 const [id, email, password] = Object.values(user['0']);
@@ -51,17 +54,22 @@ class UsersService {
 
     async forgot_password(){
         try{
-            const tk = crypto.randomBytes(20).toString('hex');
+            const tk = crypto.randomBytes(10).toString('hex');
             const now = new Date();
             now.setHours(now.getHours() + 1);
             this.data.reset_token = tk;
             this.data.token_date = now;
-            const Query = new QueryBuilder(this.data);
-            const user = await Query.verifyUserEmail();
+            const user = await Query.verifyUserEmail(this.data.email);
             const flag = user['0']?true:false;
             if(flag && Object.values(user['0']).indexOf(this.data.email)){
                 const [id, email] = Object.values(user['0']);
-                const savedToken = Query.saveToken(id, email);
+                const savedToken = Query.saveToken(
+                    id, 
+                    email,
+                    this.reset_token,
+                    this.token_date
+                );
+
                 return savedToken;                
             }
         
@@ -82,21 +90,24 @@ class UsersService {
                 Number(process.env.SALT));
 
             this.data.date = date;
-            const Query = new QueryBuilder(this.data);
-            const user = await Query.updatePassword();
+            const user = await Query.updatePassword(
+                this.data.id,
+                this.data.email,
+                this.data.password,
+                this.data.date
+            );
             
             return user;
 
         }catch(err){
-            return err;
+            throw err;
         }
     }
 
 
     async getUser(){
         try{
-            const Query = new QueryBuilder(this.data);
-            const user = await Query.getUser();
+            const user = await Query.getUser(this.email, this.reset_token);
             const flag = user['0']?true:false;
            if(flag && Object.values(user['0']).indexOf(this.data.email) === 0){  
                 const {email, reset_token, token_date} = user['0'];
@@ -115,8 +126,7 @@ class UsersService {
 
     async deleteUser(){
         try{
-            const Query = new QueryBuilder(this.data);
-            const deletedUser = await Query.deleteUserById();
+            const deletedUser = await Query.deleteUserById(this.id);
 
             return deletedUser;
         }catch(err){
