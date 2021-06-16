@@ -1,68 +1,73 @@
 const knex = require('../infra/database.js');
 
-class UserQueryBuilder {
-    
-    constructor (data){
-        this.id = data.id;
-        this.name = data.name;
-        this.email = data.email;
-        this.password = data.password;
-        this.date = data.date;
-    }
+const Query = {
 
-    getUserById(){
-        const queryReturn = knex.select("id", "name", "email")
+    getUser: function(email, reset_token){
+        const queryReturn = knex.select("email", "reset_token", "token_date")
             .from("users")
-            .where({id: this.id});
+            .where({email, reset_token});
 
         return queryReturn;
-    }
+    },
     
-    registerUser(){
+    registerUser: function(name, email, password){
 
         const queryReturn = knex("users")
             .returning(["id", "name", "email"])
             .insert({
-                name: this.name, 
-                email: this.email,
-                password: this.password
+                name,
+                email,
+                password
             });
         return queryReturn;
-    }
+    },
     
-    verifyUserEmail(){
+    verifyUserEmail: function(email){
 
         const queryReturn = knex.select("id", "email", "password")
             .from("users")
-            .where({email: this.email});
+            .where({email});
+        return queryReturn;
+    },
+
+    saveToken: function(id, email, reset_token, token_date){
+        const queryReturn = knex("users")
+            .returning(["name", "email", "reset_token", "token_date"])
+            .where({
+                id,
+                email
+            })
+            .update({
+                reset_token,
+                token_date
+            });
 
         return queryReturn;
-    }
+    },
 
-    updatePassword(){
+    updatePassword: function(email, password, date){
         const queryReturn = knex("users")
             .returning(["id", "email"])
             .where({
-                id: this.id,
-                email: this.email
+                email
             })
             .update({
-                password: this.password,
-                updated_at: this.date
+                password,
+                updated_at: date
             });
 
 
         return queryReturn;
-    }
-    
-    deleteUserById(){
+    },
+
+    deleteUserById: function(id){
         const queryReturn = knex("users")
             .returning(["id", "name", "email"])
-            .where({id: this.id})
+            .where({id})
             .del();
 
         return queryReturn;
     }
 }
 
-module.exports = UserQueryBuilder;
+module.exports = Query;
