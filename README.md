@@ -1,6 +1,6 @@
 # portfolio
 
-A sample about my development skills
+A sample about my development skills, deploy on heroku -> [fabiokleis.herokuapp](https://fabiokleis.herokuapp.com/)
 
 ### Back-end
 
@@ -11,6 +11,4 @@ A sample about my development skills
  * dotenv, jsonwebtoken and bcrypt
 
 
-### Front-end // in near future
-
- * React
+### Front-end go to repo -> [react_portfolio](https://github.com/Fabiokleis/react_portfolio)

@@ -68,7 +68,6 @@ router.post('/forgot_password', express.json(), async(req, res, next) => {
 
 router.put('/', express.json(), async(req, res, next) => {
     try{
-        console.log(req.body);
         const valueObj = await UserValidator
             .updateUserPasswd(req.body);
        
