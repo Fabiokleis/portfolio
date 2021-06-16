@@ -6,5 +6,7 @@ create table users (
     email text not null unique,
     password text not null
     created_at timestamp not null default current_timestamp,
-    updated_at timestamp not null default current_timestamp
+    updated_at timestamp not null default current_timestamp,
+    token_date timestamp unique,
+    reset_token text unique
 );
