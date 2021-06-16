@@ -59,7 +59,7 @@ router.post('/forgot_password', express.json(), async(req, res, next) => {
                     const conf = mailConfig.setMailOpt(data, results['0'].email);
 
                     transporter.sendMail(conf, (err, data) => {
-                        if(err) {
+                        if(err){
                             console.log(err);
                         }else{
                             res.status(200).json(results);
