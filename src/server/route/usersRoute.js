@@ -62,6 +62,7 @@ router.post('/forgot_password', express.json(), async(req, res, next) => {
                         if(err) {
                             console.log(err);
                         }else{
+                            console.log(data);
                             res.status(200).json(results);
                         }
                     });
