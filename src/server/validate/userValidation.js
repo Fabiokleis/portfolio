@@ -5,9 +5,13 @@ const Joi = require('joi');
 const UserValidator = {
     getUser: (body) => {
         const UserSchema = Joi.object({
-            id: Joi.number()
-                .min(1)
-                .max(1000)
+            email: Joi.string()
+                .email()
+                .min(5)
+                .max(80)
+                .required(),
+
+            reset_token: Joi.string()
                 .required()
         });
 
@@ -69,6 +73,17 @@ const UserValidator = {
                 .max(80)
                 .required()
             
+        });
+        return UserSchema.validateAsync(data);
+    },
+
+    forgot_password: (data) => {
+        const UserSchema = Joi.object({
+            email: Joi.string()
+                .email()
+                .min(5)
+                .max(80)
+                .required()
         });
         return UserSchema.validateAsync(data);
     },
