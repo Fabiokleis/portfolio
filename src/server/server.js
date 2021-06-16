@@ -12,6 +12,7 @@ app.use((req, res, next) => {
     next();
 });
 
+
 app.use('/users', usersRoute);
 
 app.use((err, req, res, next) => {
@@ -21,13 +22,12 @@ app.use((err, req, res, next) => {
     }else if(err.details){
         msg.message = err.details[0].message;
     }else if(err.message){
-        msg.message = err.message
+        msg.message = err.message;
     }
-
     res.status(err.statusCode).json(msg);
 });
 
 app.listen(process.env.PORT, (err) => { 
-    console.log("connected");
+    console.log("connected, running on ", process.env.PORT);
     if(err) throw err;
 });
