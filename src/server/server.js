@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const usersRoute = require('./route/usersRoute');
+const morgan = require('morgan');
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
@@ -12,8 +13,7 @@ app.use((req, res, next) => {
     next();
 });
 
-
-app.use('/users', usersRoute);
+app.use('/users', morgan('dev'),usersRoute);
 
 app.use((err, req, res, next) => {
     let msg = {};
