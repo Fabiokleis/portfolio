@@ -65,8 +65,6 @@ router.post('/forgot_password', express.json(), async(req, res, next) => {
 
 })
 
-
-
 router.post('/', express.json(), async(req, res, next) => { 
     try{
         const valueObj = await UserValidator.createUser(req.body);
