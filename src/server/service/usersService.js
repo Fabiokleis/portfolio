@@ -98,7 +98,6 @@ class UsersService {
                 this.data.token_date,
                 this.data.date
             );
-            console.log(user);
             return user;
 
         }catch(err){
