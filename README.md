@@ -9,6 +9,7 @@ A sample about my development skills, deploy on heroku -> [fabiokleis.herokuapp]
  * Jest and Axios
  * knex, Postgres and Joi
  * dotenv, jsonwebtoken and bcrypt
-
+ * Nodemailer and EJS
 
 ### Front-end go to repo -> [react_portfolio](https://github.com/Fabiokleis/react_portfolio)
+
