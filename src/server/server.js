@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 const usersRoute = require('./route/usersRoute');
-const morgan = require('morgan');
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', 'https://fabiokleis.herokuapp.com');
