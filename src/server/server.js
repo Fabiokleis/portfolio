@@ -12,7 +12,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use('/users', morgan('dev'),usersRoute);
+app.use('/users', usersRoute);
 
 app.use((err, req, res, next) => {
     let msg = {};
