@@ -77,7 +77,7 @@ const UserValidator = {
                 .required(),
             
             password: Joi.string()
-                .min(5)
+                .min(8)
                 .max(80)
                 .required(),
 
