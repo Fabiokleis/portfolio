@@ -66,7 +66,7 @@ router.post('/forgot_password', express.json(), async(req, res, next) => {
 })
 
 
-router.put('/', express.json(), async(req, res, next) => {
+router.put('/new_password', express.json(), async(req, res, next) => {
     try{
         const valueObj = await UserValidator
             .updateUserPasswd(req.body);

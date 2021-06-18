@@ -94,9 +94,10 @@ class UsersService {
                 this.data.id,
                 this.data.email,
                 this.data.password,
+                this.data.reset_token,
+                this.data.token_date,
                 this.data.date
             );
-            
             return user;
 
         }catch(err){
@@ -107,13 +108,13 @@ class UsersService {
 
     async getUser(){
         try{
-            const user = await Query.getUser(this.data.email, this.data.reset_token);
+            const user = await Query.getUser(this.data.id, this.data.email, this.data.reset_token, this.data.token_date);
             const flag = user['0']?true:false;
-           if(flag && Object.values(user['0']).indexOf(this.data.email) === 0){  
-                const {email, reset_token, token_date} = user['0'];
+           if(flag && Object.values(user['0']).indexOf(this.data.id) === 0){  
+                const {id, email, reset_token, token_date} = user['0'];
                 const now = new Date();
                 if((token_date.getDate() === now.getDate()) && token_date.getHours() > now.getHours()){
-                    return {message: "token not expired! continue"};
+                    return {message: "Token date not expired, continue and recreate your password!"};
                 }
                 throw new Error("token expired, try again!");
             }

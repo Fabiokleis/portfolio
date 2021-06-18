@@ -1,5 +1,7 @@
 const mailer = require('nodemailer');
 
+require('dotenv').config({path: "/home/urameshi/ports_/portfolio/src/.env"});
+
 const transporter = mailer.createTransport({
     service: 'gmail',
     auth: {
