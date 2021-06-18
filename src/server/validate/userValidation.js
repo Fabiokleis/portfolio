@@ -5,6 +5,11 @@ const Joi = require('joi');
 const UserValidator = {
     getUser: (body) => {
         const UserSchema = Joi.object({
+            id: Joi.number()
+                .min(1)
+                .max(1000)
+                .required(),
+
             email: Joi.string()
                 .email()
                 .min(5)
@@ -12,6 +17,9 @@ const UserValidator = {
                 .required(),
 
             reset_token: Joi.string()
+                .required(),
+            
+            token_date: Joi.string()
                 .required()
         });
 
@@ -71,7 +79,14 @@ const UserValidator = {
             password: Joi.string()
                 .min(5)
                 .max(80)
+                .required(),
+
+            reset_token: Joi.string()
+                .required(),
+            
+            token_date: Joi.string()
                 .required()
+
             
         });
         return UserSchema.validateAsync(data);
