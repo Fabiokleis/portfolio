@@ -19,12 +19,12 @@ router.get('/', express.urlencoded({extended: true}), async(req, res, next) => {
     }
 });
 
-router.post('/', express.json(), async(req, res, next) => { 
+router.post('/subscribe_email', express.json(), async(req, res, next) => {
     try{
-        const valueObj = await UserValidator.createUser(req.body);
+        const valueObj = await UserValidator.validateEmail(req.body);
         const userService = new UsersService(valueObj);
-        const results = await userService.registerUser();
-        res.status(201).json(results);
+        const results = await userService.subscribeEmail();
+        res.status(200).json(results);
     }catch(err){
         err.statusCode = 400;
         next(err);
@@ -65,6 +65,17 @@ router.post('/forgot_password', express.json(), async(req, res, next) => {
 
 })
 
+router.post('/', express.json(), async(req, res, next) => { 
+    try{
+        const valueObj = await UserValidator.createUser(req.body);
+        const userService = new UsersService(valueObj);
+        const results = await userService.registerUser();
+        res.status(201).json(results);
+    }catch(err){
+        err.statusCode = 400;
+        next(err);
+    }
+});
 
 router.put('/new_password', express.json(), async(req, res, next) => {
     try{

@@ -125,6 +125,18 @@ class UsersService {
         }
     }
 
+    async subscribeEmail(){
+        try{
+            const subscribed = await Query.subscribeUserEmail(this.data.email);
+            return subscribed;
+        }catch(err){
+            throw err;
+        }
+
+
+    }
+
+
     async deleteUser(){
         try{
             const deletedUser = await Query.deleteUserById(this.id);
