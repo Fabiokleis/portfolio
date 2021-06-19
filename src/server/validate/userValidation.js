@@ -77,7 +77,7 @@ const UserValidator = {
                 .required(),
             
             password: Joi.string()
-                .min(5)
+                .min(8)
                 .max(80)
                 .required(),
 
@@ -103,6 +103,19 @@ const UserValidator = {
         return UserSchema.validateAsync(data);
     },
 
+    validateEmail: (data) => {
+        const UserSchema = Joi.object({
+            email: Joi.string()
+                .email()
+                .min(5)
+                .max(80)
+                .required()
+        });
+        return UserSchema.validateAsync(data);
+    },
+
+
+
     deleteUser: (data) => {
         const UserSchema = Joi.object({
             id: Joi.number()
@@ -112,7 +125,7 @@ const UserValidator = {
         });
         return UserSchema.validateAsync(data);
     }
-    
+     
    
 }
 

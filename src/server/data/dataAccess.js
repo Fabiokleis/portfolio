@@ -30,6 +30,13 @@ const Query = {
         return queryReturn;
     },
 
+    subscribeUserEmail: function(email){
+        const queryReturn = knex('subscribedemails')
+            .returning('email')
+            .insert({email});
+        return queryReturn;
+    },
+
     saveToken: function(id, email, reset_token, token_date){
         const queryReturn = knex("users")
             .returning(["id", "email", "reset_token", "token_date"])
