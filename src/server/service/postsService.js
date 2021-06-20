@@ -7,7 +7,7 @@ class PostsService {
     
     async getAllPosts(){
         try{
-            const allPosts = await Query.getAllPosts();
+            const allPosts = await Query.getAllPosts(this.data);
             return allPosts;
         }catch(err){
             throw err;

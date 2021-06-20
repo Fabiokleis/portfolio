@@ -3,6 +3,17 @@ const Joi = require('joi');
 // validation layer to posts
 
 const PostsValidator = {
+    validatePage: (query) => {
+        const PostSchema = Joi.object({
+            page: Joi.number()
+                .min(1)
+                .max(1000)
+                .required()
+        });
+
+        return PostSchema.validateAsync(query);
+    },
+
     getPost: (body) => {
         const PostSchema = Joi.object({
             id: Joi.number()

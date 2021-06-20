@@ -2,9 +2,10 @@ const knex = require('../infra/database.js');
 
 const Query = {
 
-    getAllPosts: function(){
+    getAllPosts: function({page}){
         const queryReturn = knex('posts')
-            .limit(5);
+            .limit(5)
+            .offset((page - 1) * 5);
             
         return queryReturn;
     },

@@ -4,9 +4,10 @@ const auth = require('../service/authService');
 const PostsService = require('../service/postsService');
 const PostsValidator = require('../validate/postsValidation');
 
-router.get('/', async(req, res, next) => {
+router.get('/', express.urlencoded({extended: true}), async(req, res, next) => {
     try{
-        const postsService = new PostsService();
+        const valueObj = await PostsValidator.validatePage(req.query);
+        const postsService = new PostsService(valueObj);
         const posts = await postsService.getAllPosts();
         res.status(200).json(posts);
     }catch(err){
