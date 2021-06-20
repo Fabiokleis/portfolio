@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const Query = require('../data/dataAccess.js');
+const Query = require('../data/userDataAcces.js');
 const crypto = require('crypto');
 class UsersService {
     constructor(data){

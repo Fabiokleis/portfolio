@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const usersRoute = require('./route/usersRoute');
+const postsRoute = require('./route/postsRoute.js');
 const morgan = require('morgan');
 
 app.use((req, res, next) => {
@@ -13,7 +14,8 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use('/users', morgan('dev'),usersRoute);
+app.use('/users', morgan('dev'), usersRoute);
+app.use('/posts', morgan('dev'), postsRoute);
 
 app.use((err, req, res, next) => {
     let msg = {};

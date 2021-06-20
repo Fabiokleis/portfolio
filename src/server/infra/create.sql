@@ -13,4 +13,9 @@ create table users (
 
 create table subscribedemails(
     email text not null unique
-)
+);
+
+create table posts(
+    id serial,
+    user_id integer not null references users(id) on delete cascade
+);
