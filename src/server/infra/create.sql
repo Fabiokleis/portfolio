@@ -10,3 +10,7 @@ create table users (
     token_date timestamp unique,
     reset_token text unique
 );
+
+create table subscribedemails(
+    email text not null unique
+)
