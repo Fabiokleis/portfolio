@@ -19,5 +19,7 @@ create table posts(
     id serial,
     user_id integer not null references users(id) on delete cascade,
     title text not null unique,
-    description text not null
+    description text not null,
+    created_at timestamp not null default current_timestamp,
+    updated_at timestamp not null default current_timestamp
 );

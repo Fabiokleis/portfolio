@@ -12,7 +12,7 @@ const Query = {
 
     savePost: function({user_id, title, description}){
         const queryReturn = knex('posts')
-            .returning(['id', 'title', 'description'])
+            .returning(['id', 'title', 'description', 'created_at'])
             .insert({
                 user_id,
                 title,
@@ -22,15 +22,16 @@ const Query = {
     
     },
 
-    updatePost: function({title, description, user_id, id}){
+    updatePost: function({title, description, user_id, id, updated_at}){
         const queryReturn = knex('posts')
-            .returning(['id', 'title', 'description'])
+            .returning(['id', 'title', 'description', 'updated_at'])
             .where({
                 user_id,
                 id
             }).update({
                 title,
-                description
+                description,
+                updated_at
             });
         return queryReturn;
     },
