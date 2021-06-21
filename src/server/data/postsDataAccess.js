@@ -3,12 +3,19 @@ const knex = require('../infra/database.js');
 const Query = {
 
     getAllPosts: function({page}){
-        const queryReturn = knex('posts')
-            .orderBy('updated_at', 'desc')
+        const queryReturn = knex
+            .select(
+            'posts.id', 
+            'users.name',
+            'title', 
+            'description',
+            'posts.updated_at'
+            ).from('posts')
+            .join('users', 'users.id', '=', 'posts.user_id')
+            .orderBy('posts.updated_at', 'desc')
             .limit(5)
             .offset((page - 1) * 5);
-            
-        return queryReturn;
+       return queryReturn;
     },
 
     savePost: function({user_id, title, description}){
