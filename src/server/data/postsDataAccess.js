@@ -4,6 +4,7 @@ const Query = {
 
     getAllPosts: function({page}){
         const queryReturn = knex('posts')
+            .orderBy('updated_at', 'desc')
             .limit(5)
             .offset((page - 1) * 5);
             
