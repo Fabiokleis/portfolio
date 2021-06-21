@@ -25,11 +25,27 @@ class PostsService {
 
     async updatePost(){
         try{
-            const user = await Query.verifyUserById(this.data);
-            if(user){
+            const verifyIfPostExist = await Query.verifyPost(this.data);
+            const flag = verifyIfPostExist['0']?true:false;
+            if(flag){
                 const updatedPost = await Query.updatePost(this.data);
+                return updatedPost;
             }
-            return updatedPost;
+            throw new Error("post not exists!");
+        }catch(err){
+            throw err;
+        }
+    }
+
+    async deletePost(){
+        try{
+            const verifyIfPostExist = await Query.verifyPost(this.data);
+            const flag = verifyIfPostExist['0']?true:false;
+            if(flag){
+                const deletePost = await Query.deletePost(this.data);
+                return deletePost;
+            }
+            throw new Error("post not exists!");
         }catch(err){
             throw err;
         }

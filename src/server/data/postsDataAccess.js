@@ -19,6 +19,7 @@ const Query = {
                 description
             });
         return queryReturn;
+    
     },
 
     updatePost: function({title, description, user_id, id}){
@@ -34,13 +35,21 @@ const Query = {
         return queryReturn;
     },
 
-    verifyUserById: function({user_id}){
-        const queryReturn = knex.select(['name', 'email'])
-            .where({id});
-        
+    deletePost: function({user_id, id}){
+        const queryReturn = knex('posts')
+            .where({user_id, id})
+            .del();
+
+        return queryReturn;
+    },
+
+    verifyPost: function({user_id, id}){
+        const queryReturn = knex.select(['id', 'user_id'])
+            .from('posts')
+            .where({id, user_id});
+
         return queryReturn;
     }
-
 }
 
 module.exports = Query;

@@ -67,6 +67,22 @@ const PostsValidator = {
                .required()
 
         });
+        
+        return PostSchema.validateAsync(body);
+    },
+
+    deletePost: (body) => {
+        const PostSchema = Joi.object({
+            user_id: Joi.number()
+                .min(1)
+                .max(1000)
+                .required(),
+
+            id: Joi.number()
+                .min(1)
+                .max(1000)
+                .required()
+        });
 
         return PostSchema.validateAsync(body);
     }

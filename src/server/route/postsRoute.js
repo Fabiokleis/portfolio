@@ -16,8 +16,9 @@ router.get('/', express.urlencoded({extended: true}), async(req, res, next) => {
     }
 });
 
-router.post('/', express.json(), async(req, res, next) => {
+router.post('/', auth, express.json(), async(req, res, next) => {
     try{
+        req.body.user_id = req.user.id;
         const valueObj = await PostsValidator.createPost(req.body);
         const postsService = new PostsService(valueObj);
         const result = await postsService.savePost();
@@ -44,5 +45,24 @@ router.put('/', auth, express.json(), express.urlencoded({extended: true}),
        }
     }
 );
+
+router.delete('/', auth, express.urlencoded({extended: true}), 
+    async(req, res, next) => {
+       try{
+           const user_id = req.user.id;
+           const id = parseInt(req.query.id);
+           const data = {user_id, id};
+           const valueObj = await PostsValidator.deletePost(data);
+           const postsService = new PostsService(valueObj);
+           const result = await postsService.deletePost();
+           
+           res.status(200).json(result);
+       }catch(err){
+           err.statusCode = 404;
+           next(err);
+       }
+    }
+);
+
 
 module.exports = router;
