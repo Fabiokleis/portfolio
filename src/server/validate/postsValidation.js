@@ -43,6 +43,32 @@ const PostsValidator = {
            });
     
         return PostSchema.validateAsync(body);
+    },
+    
+    updatePost: (body) => {
+        const PostSchema = Joi.object({
+                   
+            title: Joi.string()
+               .min(5)
+               .max(50)
+               .required(),
+
+            description: Joi.string()
+                .required(),
+
+            user_id: Joi.number()
+                .min(1)
+                .max(1000)
+                .required(),
+
+            id: Joi.number()
+               .min(1)
+               .max(1000)
+               .required()
+
+        });
+
+        return PostSchema.validateAsync(body);
     }
    
 }

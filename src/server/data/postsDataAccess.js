@@ -19,6 +19,26 @@ const Query = {
                 description
             });
         return queryReturn;
+    },
+
+    updatePost: function({title, description, user_id, id}){
+        const queryReturn = knex('posts')
+            .returning(['id', 'title', 'description'])
+            .where({
+                user_id,
+                id
+            }).update({
+                title,
+                description
+            });
+        return queryReturn;
+    },
+
+    verifyUserById: function({user_id}){
+        const queryReturn = knex.select(['name', 'email'])
+            .where({id});
+        
+        return queryReturn;
     }
 
 }

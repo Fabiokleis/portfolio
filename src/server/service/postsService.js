@@ -23,6 +23,18 @@ class PostsService {
         }
     }
 
+    async updatePost(){
+        try{
+            const user = await Query.verifyUserById(this.data);
+            if(user){
+                const updatedPost = await Query.updatePost(this.data);
+            }
+            return updatedPost;
+        }catch(err){
+            throw err;
+        }
+    }
+
 }
 
 module.exports = PostsService;
