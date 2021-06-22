@@ -6,7 +6,6 @@ const UserValidator = require('../validate/userValidation');
 const auth = require('../service/authService');
 const ejs = require('ejs');
 
-
 router.get('/', express.urlencoded({extended: true}), async(req, res, next) => {
     try{
         const valueObj = await UserValidator.getUser(req.query);
@@ -63,7 +62,7 @@ router.post('/forgot_password', express.json(), async(req, res, next) => {
         next(err);
     }
 
-})
+});
 
 router.post('/', express.json(), async(req, res, next) => { 
     try{

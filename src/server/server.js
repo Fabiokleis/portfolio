@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 const usersRoute = require('./route/usersRoute');
+const postsRoute = require('./route/postsRoute.js');
+
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', 'https://fabiokleis.herokuapp.com');
@@ -12,7 +14,10 @@ app.use((req, res, next) => {
     next();
 });
 
+
 app.use('/users', usersRoute);
+app.use('/posts', postsRoute);
+
 
 app.use((err, req, res, next) => {
     let msg = {};
