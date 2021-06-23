@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const Query = require('../data/dataAccess.js');
+const Query = require('../data/userDataAcces.js');
 const crypto = require('crypto');
 class UsersService {
     constructor(data){
@@ -108,10 +108,10 @@ class UsersService {
 
     async getUser(){
         try{
-            const user = await Query.getUser(this.data.id, this.data.email, this.data.reset_token, this.data.token_date);
+            const user = await Query.getUser(this.data.id);
             const flag = user['0']?true:false;
-           if(flag && Object.values(user['0']).indexOf(this.data.id) === 0){  
-                const {id, email, reset_token, token_date} = user['0'];
+            if(flag){
+                const {reset_token, token_date} = user['0'];
                 const now = new Date();
                 if((token_date.getDate() === now.getDate()) && token_date.getHours() > now.getHours()){
                     return {message: "Token date not expired, continue and recreate your password!"};

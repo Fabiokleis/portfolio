@@ -2,10 +2,10 @@ const knex = require('../infra/database.js');
 
 const Query = {
 
-    getUser: function(id, email, reset_token){
-        const queryReturn = knex.select("id", "email", "reset_token", "token_date")
+    getUser: function(id){
+        const queryReturn = knex.select(["reset_token", "token_date"])
             .from("users")
-            .where({id, email, reset_token});
+            .where({id});
 
         return queryReturn;
     },
@@ -39,7 +39,7 @@ const Query = {
 
     saveToken: function(id, email, reset_token, token_date){
         const queryReturn = knex("users")
-            .returning(["id", "email", "reset_token", "token_date"])
+            .returning(["id", "name", "email", "reset_token", "token_date"])
             .where({
                 id,
                 email
