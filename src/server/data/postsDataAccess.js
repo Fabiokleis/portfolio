@@ -18,6 +18,22 @@ const Query = {
        return queryReturn;
     },
 
+    getUserLastPosts: function({user_id, page}){
+        const queryReturn = knex
+            .select(
+                'posts.id',
+                'users.name',
+                'title',
+                'description',
+                'posts.updated_at'
+            ).from('posts')
+            .join('users', 'users.id', '=', user_id)
+            .orderBy('posts.updated_at', 'desc')
+            .limit(5)
+            .offset((page - 1) * 5);
+        return queryReturn;
+    },
+
     savePost: function({user_id, title, description}){
         const queryReturn = knex('posts')
             .returning(['id', 'title', 'description', 'created_at'])

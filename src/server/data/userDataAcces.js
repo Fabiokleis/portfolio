@@ -24,7 +24,7 @@ const Query = {
     
     verifyUserEmail: function(email){
 
-        const queryReturn = knex.select("id", "email", "password")
+        const queryReturn = knex.select("id", "name", "email", "password")
             .from("users")
             .where({email});
         return queryReturn;
