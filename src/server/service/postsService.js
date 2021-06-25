@@ -14,6 +14,15 @@ class PostsService {
         }
     }
 
+    async getUserLastPosts(){
+        try{
+            const allUserPosts = await Query.getUserLastPosts(this.data);
+            return allUserPosts;
+        }catch(err){
+            throw err;
+        }
+    }
+
     async savePost(){
         try{
             const savedPost = await Query.savePost(this.data);

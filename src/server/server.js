@@ -3,7 +3,6 @@ const app = express();
 const usersRoute = require('./route/usersRoute');
 const postsRoute = require('./route/postsRoute.js');
 
-
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', 'https://fabiokleis.herokuapp.com');
     res.header('Access-Control-Expose-Headers', 'Content-Type, Authorization, Origin');

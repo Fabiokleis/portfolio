@@ -4,6 +4,20 @@ const auth = require('../service/authService');
 const PostsService = require('../service/postsService');
 const PostsValidator = require('../validate/postsValidation');
 
+
+router.get('/profile_posts', auth, express.urlencoded({extended: true}) ,async(req, res, next) => {
+    try{
+        const user_id = req.user.id;
+        const page = req.query.page;
+        const postsService = new PostsService({user_id, page});
+        const posts = await postsService.getUserLastPosts();
+        res.status(200).json(posts);
+    }catch(err){
+        err.statusCode = 400;
+        next(err);
+    }
+});
+
 router.get('/', express.urlencoded({extended: true}), async(req, res, next) => {
     try{
         const valueObj = await PostsValidator.validatePage(req.query);
