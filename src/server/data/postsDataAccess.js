@@ -21,16 +21,19 @@ const Query = {
     getUserLastPosts: function({user_id, page}){
         const queryReturn = knex
             .select(
-                'posts.id',
-                'users.name',
-                'title',
-                'description',
-                'posts.updated_at'
-            ).from('posts')
-            .join('users', 'users.id', '=', user_id)
-            .orderBy('posts.updated_at', 'desc')
-            .limit(5)
-            .offset((page - 1) * 5);
+            'name',
+            'posts.id',
+            'title',
+            'description',
+            'posts.updated_at'
+            ).from('users')
+            .where('users.id', '=', user_id)
+            .join('posts', function() {
+                this.on('posts.user_id', '=', user_id)
+            }).orderBy('posts.updated_at', 'desc')
+           .limit(5)
+           .offset((page - 1) * 5);
+    
         return queryReturn;
     },
 
