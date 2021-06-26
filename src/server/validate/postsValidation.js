@@ -38,6 +38,8 @@ const PostsValidator = {
                 .required(),
         
             description: Joi.string()
+                .min(5)
+                .max(255)
                 .required()
 
            });
@@ -54,6 +56,7 @@ const PostsValidator = {
                .required(),
 
             description: Joi.string()
+                .min(5)
                 .required(),
 
             user_id: Joi.number()

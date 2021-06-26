@@ -8,7 +8,8 @@ create table users (
     created_at timestamp not null default current_timestamp,
     updated_at timestamp not null default current_timestamp,
     token_date timestamp unique,
-    reset_token text unique
+    reset_token text unique,
+    bio text not null
 );
 
 create table subscribedemails(
@@ -22,4 +23,13 @@ create table posts(
     description text not null,
     created_at timestamp not null default current_timestamp,
     updated_at timestamp not null default current_timestamp
+);
+
+CREATE TABLE profile_images(
+    id SERIAL NOT NULL PRIMARY KEY,
+    user_id integer not null unique references users(id) on delete cascade,
+    filename TEXT UNIQUE NOT NULL,
+    filepath TEXT NOT NULL,
+    mimetype TEXT NOT NULL,
+    size BIGINT NOT NULL
 );
