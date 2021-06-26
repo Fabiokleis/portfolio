@@ -134,6 +134,28 @@ class UsersService {
 
     }
 
+    async saveImg(){
+        try{
+            const savedImg = await Query.saveImg(this.data);
+            return savedImg;
+        }catch(err){
+            throw err;
+        }
+    }
+    
+    async getFilename(){
+        try{
+            const filename_db = await Query.getFilename(this.data);
+            const flag = filename_db['0']?true:false;
+            if(flag){
+                return filename_db['0'].filename;
+            }
+            throw new Error("Image does not exist!");
+        }catch(err){
+            throw err;
+        }
+    }
+
 
     async deleteUser(){
         try{

@@ -68,6 +68,28 @@ const Query = {
         return queryReturn;
     },
 
+    saveImg: function({user_id, filename, filepath, mimetype, size}){
+        const queryReturn = knex("profile_images")
+            .returning(["user_id","filename", "mimetype", "size"])
+            .insert({
+                user_id,
+                filename,
+                filepath,
+                mimetype,
+                size
+            });
+
+        return queryReturn;
+    },
+    
+    getFilename: function({user_id, filename}){
+        const queryReturn = knex.select("filename")
+            .from("profile_images")
+            .where({user_id, filename});
+
+        return queryReturn;
+    },
+
     deleteUserById: function(id){
         const queryReturn = knex("users")
             .returning(["id", "name", "email"])

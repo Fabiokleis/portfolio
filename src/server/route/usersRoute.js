@@ -1,10 +1,40 @@
 const express = require('express');
 const router = express.Router();
+const path = require('path');
 const UsersService = require('../service/usersService');
-const mailConfig = require('../service/configMail.js');
+const mailConfig = require('../service/configMail');
 const UserValidator = require('../validate/userValidation');
 const auth = require('../service/authService');
 const ejs = require('ejs');
+const multer = require('multer');
+const storage = multer.diskStorage({
+    destination: function (req, file, cb){
+        cb(null, __dirname+'/uploads/')
+    },
+    
+    filename: function (req, file, cb){
+        cb(null, Date.now() + "_" + file.originalname)
+    }
+
+});
+
+const upload = multer({storage});
+
+router.get('/image/:filename', auth, express.urlencoded({extended: true}), 
+    async(req, res, next) => {
+        try{
+            const {filename} = req.params;
+            const user_id = req.user.id;
+            const userService = new UsersService({user_id, filename});
+            const results = await userService.getFilename();
+            const fullPath = path.join(__dirname, '/uploads/' + results);
+            console.log(fullPath);
+            res.status(200).sendFile(fullPath);
+        }catch(err){
+            err.statusCode = 400;
+            next(err);
+        }
+});
 
 router.get('/', express.urlencoded({extended: true}), async(req, res, next) => {
     try{
@@ -14,6 +44,24 @@ router.get('/', express.urlencoded({extended: true}), async(req, res, next) => {
         res.status(200).json(results); 
     }catch(err){
         err.statusCode = 404;
+        next(err);
+    }
+});
+
+
+
+router.post('/image', auth, upload.single('img'), async(req, res, next) => {
+    try{
+        const { filename, mimetype, size} = req.file;
+        const filepath = req.file.path;
+        const user_id = req.user.id;
+        const data = {user_id, filename, filepath, mimetype, size};
+        const userService = new UsersService(data);
+        const results = await userService.saveImg();
+        
+        res.status(200).json(results);
+    }catch(err){
+        err.statusCode = 400;
         next(err);
     }
 });
