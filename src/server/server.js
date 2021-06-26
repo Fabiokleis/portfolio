@@ -21,7 +21,6 @@ app.use('/posts', morgan('dev'), postsRoute);
 
 app.use((err, req, res, next) => {
     let msg = {};
-    console.log(err);
     if(err.detail){
         msg.message = err.detail;
     }else if(err.details){

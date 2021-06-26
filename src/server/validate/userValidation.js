@@ -102,7 +102,20 @@ const UserValidator = {
         return UserSchema.validateAsync(data);
     },
 
+    userBio: (data) => {
+        const UserSchema = Joi.object({
+            id: Joi.number()
+                .min(1)
+                .max(1000)
+                .required(),
 
+            bio: Joi.string()
+                .min(5)
+                .required()
+        });
+
+        return UserSchema.validateAsync(data);
+    },
 
     deleteUser: (data) => {
         const UserSchema = Joi.object({

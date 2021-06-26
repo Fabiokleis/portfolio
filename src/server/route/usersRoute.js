@@ -7,18 +7,32 @@ const UserValidator = require('../validate/userValidation');
 const auth = require('../service/authService');
 const ejs = require('ejs');
 const multer = require('multer');
+
 const storage = multer.diskStorage({
     destination: function (req, file, cb){
         cb(null, __dirname+'/uploads/')
     },
     
     filename: function (req, file, cb){
-        cb(null, Date.now() + "_" + file.originalname)
+        cb(null, req.user.id + "_" + file.originalname)
     }
 
 });
 
-const upload = multer({storage});
+const fileFilter = function (req, file, cb){
+    const allowedMimeTypes = ['image/jpeg', 'image/png'];
+    if(allowedMimeTypes.includes(file.mimetype)){
+        cb(null, true);
+    }else{
+        cb({
+            succes: false,
+            message: 'Invalid file type. Only jpg, png files are allowed.'
+        });
+    }
+}
+const limits = {fileSize: 3 * 1024 * 1024};
+
+const upload = multer({storage, limits});
 
 router.get('/image/:filename', auth, express.urlencoded({extended: true}), 
     async(req, res, next) => {
@@ -28,7 +42,6 @@ router.get('/image/:filename', auth, express.urlencoded({extended: true}),
             const userService = new UsersService({user_id, filename});
             const results = await userService.getFilename();
             const fullPath = path.join(__dirname, '/uploads/' + results);
-            console.log(fullPath);
             res.status(200).sendFile(fullPath);
         }catch(err){
             err.statusCode = 400;
@@ -52,14 +65,14 @@ router.get('/', express.urlencoded({extended: true}), async(req, res, next) => {
 
 router.post('/image', auth, upload.single('img'), async(req, res, next) => {
     try{
-        const { filename, mimetype, size} = req.file;
+        const {filename, mimetype, size} = req.file;
         const filepath = req.file.path;
         const user_id = req.user.id;
         const data = {user_id, filename, filepath, mimetype, size};
         const userService = new UsersService(data);
         const results = await userService.saveImg();
         
-        res.status(200).json(results);
+        res.status(201).json(results);
     }catch(err){
         err.statusCode = 400;
         next(err);
@@ -117,6 +130,21 @@ router.post('/', express.json(), async(req, res, next) => {
         const valueObj = await UserValidator.createUser(req.body);
         const userService = new UsersService(valueObj);
         const results = await userService.registerUser();
+        res.status(201).json(results);
+    }catch(err){
+        err.statusCode = 400;
+        next(err);
+    }
+});
+
+router.put('/bio', auth, express.json(), async(req, res, next) => {
+    try{
+        const id = req.user.id;
+        const bio = req.body.bio;
+        const data = {id, bio};
+        const valueObj = await UserValidator.userBio(data);
+        const userService = new UsersService(valueObj)
+        const results = await userService.saveUserBio();
         res.status(201).json(results);
     }catch(err){
         err.statusCode = 400;

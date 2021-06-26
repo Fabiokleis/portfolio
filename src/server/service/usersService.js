@@ -134,6 +134,17 @@ class UsersService {
 
     }
 
+    async saveUserBio(){
+        try{
+            this.data.date = new Date();
+            const savedBio = await Query.saveUserBio(this.data);
+            return savedBio;
+        }catch(err){
+            throw err;
+        }
+    }
+
+
     async saveImg(){
         try{
             const savedImg = await Query.saveImg(this.data);

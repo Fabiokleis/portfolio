@@ -67,6 +67,16 @@ const Query = {
 
         return queryReturn;
     },
+    
+    saveUserBio: function({id, bio, date}){
+        const queryReturn = knex("users")
+            .returning("bio")
+            .where({id})
+            .update({bio, updated_at: date});
+
+        return queryReturn;
+            
+    },
 
     saveImg: function({user_id, filename, filepath, mimetype, size}){
         const queryReturn = knex("profile_images")
