@@ -10,8 +10,9 @@ router.get('/profile_posts', auth, express.urlencoded({extended: true}) ,async(r
         const user_id = req.user.id;
         const page = req.query.page;
         const postsService = new PostsService({user_id, page});
-        const posts = await postsService.getUserLastPosts();
-        res.status(200).json(posts);
+        const {allUserPosts, count} = await postsService.getUserLastPosts();
+        res.header(count);
+        res.status(200).json(allUserPosts);
     }catch(err){
         err.statusCode = 400;
         next(err);

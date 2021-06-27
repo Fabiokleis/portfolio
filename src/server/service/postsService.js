@@ -7,9 +7,10 @@ class PostsService {
     
     async getAllPosts(){
         try{
-            const allPosts = await Query.getAllPosts(this.data);
-            const counted = await Query.countAllPosts();
-            const count = {'X-Total-Count': counted[0]['count']};
+            const allPosts= await Query.getAllPosts(this.data);
+            const counted = await Query.countAllPosts({user_id: null});
+            const count = {'X-Total-Count': counted['0']['count']};
+
             return {allPosts, count};
         }catch(err){
             throw err;
@@ -19,7 +20,10 @@ class PostsService {
     async getUserLastPosts(){
         try{
             const allUserPosts = await Query.getUserLastPosts(this.data);
-            return allUserPosts;
+            const counted = await Query.countAllPosts(this.data);
+            const count = {'X-Total-Count': counted['0']['count']};
+
+            return {allUserPosts, count};
         }catch(err){
             throw err;
         }
