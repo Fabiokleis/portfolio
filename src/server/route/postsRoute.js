@@ -22,8 +22,9 @@ router.get('/', express.urlencoded({extended: true}), async(req, res, next) => {
     try{
         const valueObj = await PostsValidator.validatePage(req.query);
         const postsService = new PostsService(valueObj);
-        const posts = await postsService.getAllPosts();
-        res.status(200).json(posts);
+        const {allPosts, count} = await postsService.getAllPosts();
+        res.header(count);
+        res.status(200).json(allPosts);
     }catch(err){
         err.statusCode = 400;
         next(err);

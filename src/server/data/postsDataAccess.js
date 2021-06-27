@@ -17,6 +17,11 @@ const Query = {
             .offset((page - 1) * 5);
        return queryReturn;
     },
+    
+    countAllPosts: function(){
+        const queryReturn = knex("posts").count();
+        return queryReturn;
+    },
 
     getUserLastPosts: function({user_id, page}){
         const queryReturn = knex

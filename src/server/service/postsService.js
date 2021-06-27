@@ -8,7 +8,9 @@ class PostsService {
     async getAllPosts(){
         try{
             const allPosts = await Query.getAllPosts(this.data);
-            return allPosts;
+            const counted = await Query.countAllPosts();
+            const count = {'X-Total-Count': counted[0]['count']};
+            return {allPosts, count};
         }catch(err){
             throw err;
         }
