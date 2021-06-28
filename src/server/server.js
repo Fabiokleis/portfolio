@@ -2,10 +2,9 @@ const express = require('express');
 const app = express();
 const usersRoute = require('./route/usersRoute');
 const postsRoute = require('./route/postsRoute.js');
-const morgan = require('morgan');
 
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.header('Access-Control-Allow-Origin', 'https://fabiokleis.herokuapp.com');
     res.header('Access-Control-Expose-Headers', 'Content-Type, Authorization, X-Total-Count, Origin');
     res.header('Access-Control-Allow-Credentials', true);
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Origin');
@@ -15,8 +14,8 @@ app.use((req, res, next) => {
 });
 
 
-app.use('/users', morgan('dev'), usersRoute);
-app.use('/posts', morgan('dev'), postsRoute);
+app.use('/users', usersRoute);
+app.use('/posts', postsRoute);
 
 
 app.use((err, req, res, next) => {
