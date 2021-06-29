@@ -24,9 +24,11 @@ const Query = {
     
     verifyUserEmail: function(email){
 
-        const queryReturn = knex.select("id", "name", "email", "password", "bio")
+        const queryReturn = knex.select("users.id", "name", "email", "password", "bio", "filename")
             .from("users")
-            .where({email});
+            .where({email})
+            .join("profile_images", "profile_images.user_id", "=", "users.id");
+
         return queryReturn;
     },
 

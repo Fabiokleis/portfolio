@@ -34,11 +34,10 @@ const limits = {fileSize: 3 * 1024 * 1024};
 
 const upload = multer({storage, limits});
 
-router.get('/image/:filename', auth, express.urlencoded({extended: true}), 
+router.get('/image', express.urlencoded({extended: true}), 
     async(req, res, next) => {
         try{
-            const {filename} = req.params;
-            const user_id = req.user.id;
+            const {user_id, filename} = req.query;
             const userService = new UsersService({user_id, filename});
             const results = await userService.getFilename();
             const fullPath = path.join(__dirname, '/uploads/' + results);
