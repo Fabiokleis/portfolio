@@ -24,11 +24,22 @@ const Query = {
     
     verifyUserEmail: function(email){
 
-        const queryReturn = knex.select("id", "name", "email", "password", "bio")
+        const queryReturn = knex.select("users.id", "name", "email", "password", "bio")
             .from("users")
-            .where({email});
+            .where({email})
+
         return queryReturn;
     },
+
+    
+    verifyUserImg: function(id){
+         const queryReturn = knex.select("filename")
+            .from("profile_images")
+            .where({user_id: id});      
+
+        return queryReturn;
+    },
+
 
     subscribeUserEmail: function(email){
         const queryReturn = knex('subscribedemails')
@@ -92,6 +103,15 @@ const Query = {
         return queryReturn;
     },
     
+    updateImg: function({user_id, filename, filepath, mimetype, size}){
+        const queryReturn = knex("profile_images")
+            .returning(["user_id", "filename", "mimetype", "size"])
+            .where({user_id})
+            .update({filename, filepath, mimetype, size});
+
+        return queryReturn;
+    },
+
     getFilename: function({user_id, filename}){
         const queryReturn = knex.select("filename")
             .from("profile_images")

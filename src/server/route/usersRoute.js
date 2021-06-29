@@ -7,6 +7,7 @@ const UserValidator = require('../validate/userValidation');
 const auth = require('../service/authService');
 const ejs = require('ejs');
 const multer = require('multer');
+const fs = require('fs');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb){
@@ -34,11 +35,10 @@ const limits = {fileSize: 3 * 1024 * 1024};
 
 const upload = multer({storage, limits});
 
-router.get('/image/:filename', auth, express.urlencoded({extended: true}), 
+router.get('/image', express.urlencoded({extended: true}), 
     async(req, res, next) => {
         try{
-            const {filename} = req.params;
-            const user_id = req.user.id;
+            const {user_id, filename} = req.query;
             const userService = new UsersService({user_id, filename});
             const results = await userService.getFilename();
             const fullPath = path.join(__dirname, '/uploads/' + results);
@@ -60,8 +60,6 @@ router.get('/', express.urlencoded({extended: true}), async(req, res, next) => {
         next(err);
     }
 });
-
-
 
 router.post('/image', auth, upload.single('img'), async(req, res, next) => {
     try{
@@ -136,6 +134,25 @@ router.post('/', express.json(), async(req, res, next) => {
         next(err);
     }
 });
+
+router.put('/image', auth, express.urlencoded({extended: true}), upload.single('img'), async(req, res, next) => {
+    try{
+        fs.unlink(path.join(__dirname, '/uploads/',req.query.filename), (err) => {
+            if (err) throw err;
+        });
+        const {filename, mimetype, size} = req.file;
+        const filepath = req.file.path;
+        const user_id = req.user.id;
+        const data = {user_id, filename, filepath, mimetype, size};
+        const userService = new UsersService(data);
+        const results = await userService.updateImg();
+        res.status(200).json(results);
+    }catch(err){
+        err.statusCode = 400;
+        next(err);
+    }
+});
+
 
 router.put('/bio', auth, express.json(), async(req, res, next) => {
     try{
