@@ -30,10 +30,14 @@ class UsersService {
             const user = await Query.verifyUserEmail(this.data.email);
             const flag = user['0']?true:false;
             if(flag && Object.values(user['0']).indexOf(this.data.email)){
-                const [id, name, email, password, bio] = Object.values(user['0']);
+               const [id, name, email, password, bio] = Object.values(user['0']);
                 const hashValidation = bcrypt.compareSync(this.data.password, password);
                 if(hashValidation){
-                    const token = jwt.sign({id, name, email, bio}, process.env.TOKEN_SECRET, {expiresIn: '1h'});
+                    const usefile = await Query.verifyUserImg(id);
+                    const prof = usefile['0']?true:false;
+                    
+                    const [filename] = prof?Object.values(usefile['0']): [];
+                    const token = jwt.sign({id, name, email, bio, filename}, process.env.TOKEN_SECRET, {expiresIn: '1h'});
 
                     const auth = {'Authorization': token};
     
@@ -144,7 +148,6 @@ class UsersService {
         }
     }
 
-
     async saveImg(){
         try{
             const savedImg = await Query.saveImg(this.data);
@@ -153,7 +156,16 @@ class UsersService {
             throw err;
         }
     }
-    
+   
+    async updateImg(){
+        try{
+            const updatedImg = await Query.updateImg(this.data);
+            return updatedImg;
+        }catch(err){
+            throw err;
+        }
+    }
+
     async getFilename(){
         try{
             const filename_db = await Query.getFilename(this.data);
