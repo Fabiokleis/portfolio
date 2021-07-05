@@ -1,4 +1,4 @@
 node_modules/
 src/server/test/
 src/.env
-src/server/route/uploads/
+src/server/route/uploads
